@@ -1,0 +1,8 @@
+{
+  "messageType": "ComponentVersion",
+  "componentShortName": "component2",
+  "componentVersion": "1.34.24-20211109T190227-27f3374",
+  "componentReleaseNotesBase64": "Q29tcG9uZW50IDIgdmVyc2lvbiAyLjMuNCByZWxlYXNlIG5vdGVz",
+  "buildUrl": "https://jenkins.mydomain.com/job/JID/job/blah/128/",
+  "buildStartTime": "2021-07-02T12:04:00.123Z"
+}

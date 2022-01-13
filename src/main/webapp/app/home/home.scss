@@ -1,0 +1,276 @@
+/*!
+ * Copyright (c) 2022 Eric Thiebaut-George.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+/* ==========================================================================
+Main page styles
+========================================================================== */
+
+.hipster {
+  display: inline-block;
+  width: 347px;
+  height: 497px;
+  background-size: contain;
+}
+
+/* wait autoprefixer update to allow simple generation of high pixel density media query */
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+  only screen and (-moz-min-device-pixel-ratio: 2),
+  only screen and (-o-min-device-pixel-ratio: 2/1),
+  only screen and (min-resolution: 192dpi),
+  only screen and (min-resolution: 2dppx) {
+  .hipster {
+    background-size: contain;
+  }
+}
+
+.environment-group {
+  background-color: white;
+}
+
+.environment-group > h4 {
+  border-top: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  font-size: 14px;
+  color: #888;
+  line-height: 40px;
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+
+.environment {
+  color: #38656f;
+  background-color: #fafafa;
+  position: relative;
+  padding: 0;
+  padding-bottom: 10px;
+  margin-bottom: 1rem;
+  border: 0 solid transparent;
+  border-radius: 0.4rem;
+}
+
+.environment-right {
+  float: right;
+  right: 0px;
+  width: 65px;
+  height: 100%;
+  position: absolute;
+  text-align: right;
+}
+
+.environment-right img {
+  margin-top: 11px;
+  width: 20px;
+  filter: opacity(60%);
+}
+
+.environment-right a:last-of-type {
+  margin-right: 20px;
+}
+
+
+.environment > h5 {
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  line-height: 40px;
+  padding-left: 10px;
+  background-color: #f2f2f2;
+  border: 1px solid transparent;
+  border-top-left-radius: 0.4rem;
+  border-top-right-radius: 0.4rem;
+}
+
+.environment > h5 >a {
+  color: #000;
+}
+
+.environment div, .environment span {
+  font-family: Arial, sans-serif;
+}
+
+.environment > div.body {
+  margin: 0.75rem 1.25rem;
+  position: relative;
+}
+
+.left {
+  float: left;
+  width: 45px;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.left > .circle {
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  font-size: 20px;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto;
+}
+
+.middle {
+  margin-left: 50px;
+  margin-right: 25px;
+}
+
+.middle a {
+  color: #3E8ACC;
+}
+
+.middle > .title {
+  font-size: 14px;
+}
+
+.middle > .version {
+  font-size: 12px;
+}
+
+.middle > .timestamp > a {
+  font-size: 11px;
+  color: #aaa;
+}
+
+.middle > .user {
+  font-size: 11px;
+  color: #444444;
+}
+
+.user .build-link {
+  font-weight: bold;
+  height: 20px;
+  border-radius: 10px;
+  padding: 4px 8px 4px 8px;
+  color: white;
+  background-color: #551aaa;
+}
+
+.user .web-link {
+  font-weight: bold;
+  height: 20px;
+  border-radius: 10px;
+  padding: 4px 8px 4px 8px;
+  color: white;
+  background-color: #1aaa55;
+}
+
+.user .test-link {
+  font-weight: bold;
+  height: 20px;
+  border-radius: 10px;
+  padding: 4px 8px 4px 8px;
+  color: white;
+  background-color: #aa1a55;
+}
+
+.username {
+  margin-right: 50px;
+}
+
+.links {
+  float: right;
+  right: 0px;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.right {
+  float: right;
+  right: 0px;
+  width: 20px;
+  height: 100%;
+  position: absolute;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.right img {
+  width: 20px;
+  filter: opacity(60%);
+}
+
+.smalldate {
+  font-size: 11px;
+  font-weight: normal;
+  color: #aaa;
+}
+
+th img, td img {
+  margin-left: 20px;
+  width: 20px;
+  filter: opacity(60%);
+}
+
+.sortable {
+  cursor: move;
+}
+
+.cdk-drag-placeholder {
+  background-color: #eeeeee;
+}
+
+.cdk-drag-placeholder > h4, .cdk-drag-placeholder > div {
+  visibility: hidden;
+}
+
+.ng-sg-placeholder {
+  background-color: #eeeeee;
+  border: 0 solid transparent;
+  margin-bottom: 1rem;
+  border-radius: 0.4rem;
+}
+.ng-sg-placeholder > div {
+  visibility: hidden;
+}
+
+.container {
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  display: flex;
+  flex-wrap: nowrap;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.as-of {
+  margin-left: 200px;
+}
+
+.as-of p {
+  width: 100%;
+  margin-right: 10px;
+  margin-top: 7px;
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Deployment",
+  "fields": [
+    {
+      "fieldName": "startTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endTime",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "user",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "DeploymentStatus",
+      "fieldValues": "IN_PROGRESS,DELETED,SUCCEEDED,FAILED_KEPT,FAILED_ROLLED_BACK,VERIFIED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "namespace",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "url",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "testUrl",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "productVersion",
+      "otherEntityRelationshipName": "deployment",
+      "relationshipValidateRules": "required",
+      "relationshipName": "productVersion",
+      "otherEntityField": "version"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "environment",
+      "otherEntityRelationshipName": "deployment",
+      "relationshipValidateRules": "required",
+      "relationshipName": "environment",
+      "otherEntityField": "shortName"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "deployment"
+    }
+  ],
+  "changelogDate": "20201016115019",
+  "entityTableName": "deployment",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

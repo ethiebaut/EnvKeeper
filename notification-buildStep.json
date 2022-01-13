@@ -1,0 +1,9 @@
+{
+  "messageType": "BuildStep",
+  "buildUrl": "https://jenkins.mydomain.com/job/JID/job/blah/128/",
+  "buildStartTime": "2021-07-02T12:01:00.123Z",
+  "step": "Deployment Step",
+  "status": "SUCCEEDED",
+  "startTime": "2021-07-02T12:01:00.123Z",
+  "endTime": "2021-07-02T12:03:00.773Z"
+}

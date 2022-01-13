@@ -1,0 +1,11 @@
+{
+  "envKeeperApp": {
+    "TicketType": {
+      "null": "",
+      "BUG": "BUG",
+      "EPIC": "EPIC",
+      "STORY": "STORY",
+      "TASK": "TASK"
+    }
+  }
+}

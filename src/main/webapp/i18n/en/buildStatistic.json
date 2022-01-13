@@ -1,0 +1,24 @@
+{
+  "envKeeperApp": {
+    "buildStatistic": {
+      "home": {
+        "title": "Build Statistics",
+        "createLabel": "Create a new Build Statistic",
+        "createOrEditLabel": "Create or edit a Build Statistic",
+        "notFound": "No Build Statistics found"
+      },
+      "created": "A new Build Statistic is created with identifier {{ param }}",
+      "updated": "A Build Statistic is updated with identifier {{ param }}",
+      "deleted": "A Build Statistic is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Build Statistic {{ id }}?"
+      },
+      "detail": {
+        "title": "Build Statistic"
+      },
+      "key": "Key",
+      "value": "Value",
+      "build": "Build"
+    }
+  }
+}

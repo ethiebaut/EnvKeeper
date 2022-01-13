@@ -1,0 +1,83 @@
+{
+  "name": "Ticket",
+  "fields": [
+    {
+      "fieldName": "externalId",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "ticketType",
+      "fieldType": "TicketType",
+      "fieldValues": "BUG,EPIC,STORY,TASK",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "summary",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "ticketUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "priority",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "updated",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "reporter",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "assignee",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "description",
+      "fieldType": "byte[]",
+      "fieldTypeBlobContent": "text"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "productVersion",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "affects",
+      "otherEntityField": "version"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "productVersion",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "fixedIn",
+      "otherEntityField": "version"
+    }
+  ],
+  "changelogDate": "20201214152715",
+  "entityTableName": "ticket",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

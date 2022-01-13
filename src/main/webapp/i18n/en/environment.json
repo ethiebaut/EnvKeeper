@@ -1,0 +1,29 @@
+{
+  "envKeeperApp": {
+    "environment": {
+      "home": {
+        "title": "Environments",
+        "createLabel": "Create a new Environment",
+        "createOrEditLabel": "Create or edit a Environment",
+        "notFound": "No Environments found"
+      },
+      "created": "A new Environment is created with identifier {{ param }}",
+      "updated": "A Environment is updated with identifier {{ param }}",
+      "deleted": "A Environment is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Environment {{ id }}?"
+      },
+      "detail": {
+        "title": "Environment"
+      },
+      "history": "History",
+      "releaseNotes": "Notes",
+      "shortName": "Short Name",
+      "fullName": "Full Name",
+      "description": "Description",
+      "sortOrder": "Sort Order",
+      "environmentGroup": "Environment Group",
+      "currentDeployments": "Current Deployments"
+    }
+  }
+}

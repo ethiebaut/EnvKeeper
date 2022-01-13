@@ -1,0 +1,90 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-product-version-heading" jhiTranslate="envKeeperApp.productVersion.home.createOrEditLabel">Create or edit a Product Version</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productVersion.version" for="field_version">Version</label>
+                    <input type="text" class="form-control" name="version" id="field_version"
+                           formControlName="version"/>
+                    <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('version')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productVersion.releaseNotes" for="field_releaseNotes">Release Notes</label>
+                    <textarea type="text" class="form-control" name="releaseNotes" id="field_releaseNotes"
+                              formControlName="releaseNotes"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productVersion.product" for="field_product">Product</label>
+                    <select class="form-control" id="field_product" name="product" formControlName="productId">
+                        <option *ngIf="!editForm.get('productId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="productOption.id" *ngFor="let productOption of products; trackBy: trackById">{{ productOption.shortName }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('productId')!.invalid && (editForm.get('productId')!.dirty || editForm.get('productId')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('productId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productVersion.build" for="field_build">Build</label>
+                    <select class="form-control" id="field_build" name="build" formControlName="buildId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="buildOption.id" *ngFor="let buildOption of builds; trackBy: trackById">{{ buildOption.id }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label jhiTranslate="envKeeperApp.productVersion.component" for="field_components">Component</label>
+                    <select class="form-control" id="field_components" multiple name="components" formControlName="components">
+                        <option [ngValue]="getSelected(editForm.get('components')!.value, productComponentVersionOption)" *ngFor="let productComponentVersionOption of productcomponentversions; trackBy: trackById">{{ productComponentVersionOption.version }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

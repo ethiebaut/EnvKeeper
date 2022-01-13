@@ -1,0 +1,7 @@
+{
+  "messageType": "BuildStat",
+  "buildUrl": "https://jenkins.mydomain.com/job/JID/job/blah/128/",
+  "buildStartTime": "2021-07-02T12:01:00.123Z",
+  "key": "Number of lemmings",
+  "value": 10
+}

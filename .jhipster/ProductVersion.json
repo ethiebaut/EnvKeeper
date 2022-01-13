@@ -1,0 +1,48 @@
+{
+  "name": "ProductVersion",
+  "fields": [
+    {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "releaseNotes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "productVersion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "product",
+      "otherEntityField": "shortName"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "productVersion"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "productComponentVersion",
+      "otherEntityRelationshipName": "productVersion",
+      "relationshipName": "component",
+      "otherEntityField": "version",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20201016114919",
+  "entityTableName": "product_version",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,73 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="productComponentVersion">
+            <h2><span jhiTranslate="envKeeperApp.productComponentVersion.detail.title">Product Component Version</span> {{ productComponentVersion.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.version">Version</span></dt>
+                <dd>
+                    <span>{{ productComponentVersion.version }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.buildStatus">Build Status</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'envKeeperApp.BuildStatus.' + productComponentVersion.buildStatus }}">{{ productComponentVersion.buildStatus }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.startTime">Start Time</span></dt>
+                <dd>
+                    <span>{{ productComponentVersion.startTime | date:'medium' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.endTime">End Time</span></dt>
+                <dd>
+                    <span>{{ productComponentVersion.endTime | date:'medium' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.buildUrl">Build Url</span></dt>
+                <dd>
+                    <span>{{ productComponentVersion.buildUrl }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.releaseNotes">Release Notes</span></dt>
+                <dd class="markdown">
+                    <span><markdown [data]="productComponentVersion.releaseNotes"></markdown></span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.productComponentVersion.component">Component</span></dt>
+                <dd>
+                    <div *ngIf="productComponentVersion.componentId">
+                        <a [routerLink]="['/product-component', productComponentVersion.componentId, 'view']">{{ productComponentVersion.componentShortName }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="button"
+                    [routerLink]="['/product-component-version', productComponentVersion.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+{
+  "home": {
+    "title": "Environments",
+    "notDeployed": "Not Deployed",
+    "product": "Product",
+    "versionCopied": "Version numbers copied to the clipboard.",
+    "versionNotCopied": "No version number to copy for this environment.",
+    "logged": {
+      "message": "You are logged in as user \"{{username}}\"."
+    }
+  }
+}

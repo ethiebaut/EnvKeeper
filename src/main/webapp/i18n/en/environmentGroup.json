@@ -1,0 +1,26 @@
+{
+  "envKeeperApp": {
+    "environmentGroup": {
+      "home": {
+        "title": "Environment Groups",
+        "createLabel": "Create a new Environment Group",
+        "createOrEditLabel": "Create or edit a Environment Group",
+        "notFound": "No Environment Groups found"
+      },
+      "created": "A new Environment Group is created with identifier {{ param }}",
+      "updated": "A Environment Group is updated with identifier {{ param }}",
+      "deleted": "A Environment Group is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Environment Group {{ id }}?"
+      },
+      "detail": {
+        "title": "Environment Group"
+      },
+      "shortName": "Short Name",
+      "fullName": "Full Name",
+      "description": "Description",
+      "sortOrder": "Sort Order",
+      "hidden": "Hidden"
+    }
+  }
+}

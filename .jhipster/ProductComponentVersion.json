@@ -1,0 +1,62 @@
+{
+  "name": "ProductComponentVersion",
+  "fields": [
+    {
+      "fieldName": "version",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "buildStatus",
+      "fieldType": "BuildStatus",
+      "fieldValues": "IN_PROGRESS,SUCCEEDED,FAILED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endTime",
+      "fieldType": "Instant"
+    },
+    {
+      "fieldName": "buildUrl",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "releaseNotes",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "productComponent",
+      "otherEntityRelationshipName": "productComponentVersion",
+      "relationshipValidateRules": "required",
+      "relationshipName": "component",
+      "otherEntityField": "shortName"
+    },
+    {
+      "relationshipType": "many-to-many",
+      "otherEntityName": "productVersion",
+      "otherEntityRelationshipName": "component",
+      "relationshipName": "productVersion",
+      "otherEntityField": "version",
+      "ownerSide": false
+    }
+  ],
+  "changelogDate": "20201124103257",
+  "entityTableName": "product_component_version",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

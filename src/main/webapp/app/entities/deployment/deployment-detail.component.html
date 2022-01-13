@@ -1,0 +1,93 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="deployment">
+            <h2><span jhiTranslate="envKeeperApp.deployment.detail.title">Deployment</span> {{ deployment.id }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="envKeeperApp.deployment.startTime">Start Time</span></dt>
+                <dd>
+                    <span>{{ deployment.startTime | date:'long' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.endTime">End Time</span></dt>
+                <dd>
+                    <span>{{ deployment.endTime | date:'long' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.duration">Duration</span></dt>
+                <dd>
+                    <span *ngIf="deployment.endTime">{{ prettyPrintIntervalMS(deployment.endTime.diff(deployment.startTime)) }}&nbsp;</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.user">User</span></dt>
+                <dd>
+                    <span>{{ deployment.user }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.status">Status</span></dt>
+                <dd>
+                    <span class="status status-{{ deployment.status }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + deployment.status }}">{{ deployment.status }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.namespace">Namespace</span></dt>
+                <dd>
+                    <span>{{ deployment.namespace }}&nbsp;</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.url">Url</span></dt>
+                <dd>
+                    <span><a href="{{ deployment.url }}" target="_blank">{{ deployment.url }}</a>&nbsp;</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.testUrl">Test Url</span></dt>
+                <dd>
+                    <span><a href="{{ deployment.testUrl }}" target="_blank">{{ deployment.testUrl }}</a>&nbsp;</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.productVersion">Product Version</span></dt>
+                <dd>
+                    <div *ngIf="deployment.productVersionId">
+                        <a [routerLink]="['/product-version', deployment.productVersionId, 'view']">{{ deployment.productVersionVersion }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.environment">Environment</span></dt>
+                <dd>
+                    <div *ngIf="deployment.environmentId">
+                        <a [routerLink]="['/environment', deployment.environmentId, 'view']">{{ deployment.environmentShortName }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.deployment.build">Build</span></dt>
+                <dd>
+                    <div *ngIf="deployment.buildId">
+                        <a [routerLink]="['/build', deployment.buildId, 'view']">{{ deployment.buildId }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="button"
+                    [routerLink]="['/deployment', deployment.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+version: '2'
+services:
+  envkeeper-postgresql:
+    image: postgres:12.3
+    # volumes:
+    #     - ~/volumes/jhipster/envkeeper/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=EnvKeeper
+      - POSTGRES_PASSWORD=423gdfg3Hhsefsf8K
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432

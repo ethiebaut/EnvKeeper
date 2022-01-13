@@ -1,0 +1,134 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="envKeeperApp.deployment.home.title">Deployments</span>
+
+        <button *jhiHasAnyAuthority="'ROLE_WRITER'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-deployment" [routerLink]="['/deployment/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="envKeeperApp.deployment.home.createLabel">
+            Create a new Deployment
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="table-responsive" id="entities" [hidden]="!deployments">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="startTime"><span jhiTranslate="envKeeperApp.deployment.startTime">Start Time</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  ><span jhiTranslate="envKeeperApp.deployment.duration">Duration</span></th>
+                    <th scope="col"  jhiSortBy="environmentShortName"><span jhiTranslate="envKeeperApp.deployment.environment">Environment</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="productVersionVersion"><span jhiTranslate="envKeeperApp.deployment.productVersion">Product Version</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="url"><span jhiTranslate="envKeeperApp.deployment.url">Url</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="user"><span jhiTranslate="envKeeperApp.deployment.user">User</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  width="200px"jhiSortBy="status"><span jhiTranslate="envKeeperApp.deployment.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  width="250px" class="right-align"><fa-icon icon="filter" class="clickable" (click)="toggleFilter()" [class.selected]="filterEnabled"></fa-icon></th>
+                </tr>
+                <tr [hidden]="!filterEnabled">
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <div>
+                            <select #environmentSelect class="form-control" name="status" id="field_environment" (change)='onEnvironmentSelected(environmentSelect.value)'>
+                                <option value=""></option>
+                                <option *ngFor="let environment of environments" value="{{ environment.id }}">{{ environment.shortName }}</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <div>
+                            <select #statusSelect class="form-control" name="status" id="field_status" (change)='onStatusSelected(statusSelect.value)'>
+                                <option value=""></option>
+                                <option *ngFor="let option of deploymentStatuses" value="{{ option }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + option }}">{{ option }}</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let deployment of deployments ;trackBy: trackId">
+                    <td><a [routerLink]="['/deployment', deployment.id, 'view']">{{ deployment.id }}</a></td>
+                    <td>{{ deployment.startTime | date:'medium' }}</td>
+                    <td><span *ngIf="deployment.endTime">{{ prettyPrintIntervalMS(deployment.endTime.diff(deployment.startTime)) }}&nbsp;</span></td>
+                    <td>
+                        <div *ngIf="deployment.environmentId">
+                            <a [routerLink]="['/environment', deployment.environmentId , 'view']" >{{ deployment.environmentShortName }}</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div *ngIf="deployment.productVersionId">
+                            <a [routerLink]="['/product-version', deployment.productVersionId , 'view']" >{{ deployment.product?.shortName }} {{ prettyPrintVersion(deployment.productVersionVersion) }}</a>
+                        </div>
+                    </td>
+                    <td><a href="{{ deployment.url }}" target="_blank">{{ deployment.url }}</a></td>
+                    <td>{{ deployment.user }}</td>
+                    <td><span class="status status-{{ deployment.status }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + deployment.status }}">{{ deployment.status }}</span></td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/deployment', deployment.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit"
+                                    [routerLink]="['/deployment', deployment.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit" (click)="delete(deployment)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="deployments && deployments.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="deployments?.length === 0">
+        <span jhiTranslate="envKeeperApp.deployment.home.notFound">No deployments found</span>
+    </div>
+
+</div>

@@ -1,0 +1,145 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-deployment-heading" jhiTranslate="envKeeperApp.deployment.home.createOrEditLabel">Create or edit a Deployment</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.startTime" for="field_startTime">Start Time</label>
+                    <div class="d-flex">
+                        <input id="field_startTime" type="datetime-local" class="form-control" name="startTime" formControlName="startTime" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                    <div *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('startTime')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('startTime')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.endTime" for="field_endTime">End Time</label>
+                    <div class="d-flex">
+                        <input id="field_endTime" type="datetime-local" class="form-control" name="endTime" formControlName="endTime" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.user" for="field_user">User</label>
+                    <input type="text" class="form-control" name="user" id="field_user"
+                           formControlName="user"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.status" for="field_status">Status</label>
+                    <select class="form-control" name="status" formControlName="status" id="field_status">
+                        <option value="IN_PROGRESS">{{ 'envKeeperApp.DeploymentStatus.IN_PROGRESS' | translate }}</option>
+                        <option value="DELETED">{{ 'envKeeperApp.DeploymentStatus.DELETED' | translate }}</option>
+                        <option value="SUCCEEDED">{{ 'envKeeperApp.DeploymentStatus.SUCCEEDED' | translate }}</option>
+                        <option value="FAILED_KEPT">{{ 'envKeeperApp.DeploymentStatus.FAILED_KEPT' | translate }}</option>
+                        <option value="FAILED_ROLLED_BACK">{{ 'envKeeperApp.DeploymentStatus.FAILED_ROLLED_BACK' | translate }}</option>
+                        <option value="VERIFIED">{{ 'envKeeperApp.DeploymentStatus.VERIFIED' | translate }}</option>
+                    </select>
+                    <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('status')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.namespace" for="field_namespace">Namespace</label>
+                    <input type="text" class="form-control" name="namespace" id="field_namespace"
+                           formControlName="namespace"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.url" for="field_url">Url</label>
+                    <input type="text" class="form-control" name="url" id="field_url"
+                           formControlName="url"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.testUrl" for="field_testUrl">Test Url</label>
+                    <input type="text" class="form-control" name="testUrl" id="field_testUrl"
+                           formControlName="testUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.productVersion" for="field_productVersion">Product Version</label>
+                    <select class="form-control" id="field_productVersion" name="productVersion" formControlName="productVersionId">
+                        <option *ngIf="!editForm.get('productVersionId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="productVersionOption.id" *ngFor="let productVersionOption of productversions; trackBy: trackById">{{ productVersionOption.version }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('productVersionId')!.invalid && (editForm.get('productVersionId')!.dirty || editForm.get('productVersionId')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('productVersionId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.environment" for="field_environment">Environment</label>
+                    <select class="form-control" id="field_environment" name="environment" formControlName="environmentId">
+                        <option *ngIf="!editForm.get('environmentId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="environmentOption.id" *ngFor="let environmentOption of environments; trackBy: trackById">{{ environmentOption.shortName }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('environmentId')!.invalid && (editForm.get('environmentId')!.dirty || editForm.get('environmentId')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('environmentId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.deployment.build" for="field_build">Build</label>
+                    <select class="form-control" id="field_build" name="build" formControlName="buildId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="buildOption.id" *ngFor="let buildOption of builds; trackBy: trackById">{{ buildOption.id }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

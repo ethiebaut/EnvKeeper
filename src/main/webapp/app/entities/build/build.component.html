@@ -1,0 +1,127 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="envKeeperApp.build.home.title">Builds</span>
+
+        <button *jhiHasAnyAuthority="'ROLE_WRITER'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-build" [routerLink]="['/build/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="envKeeperApp.build.home.createLabel">
+            Create a new Build
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="table-responsive" id="entities" [hidden]="!builds">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="startTime"><span jhiTranslate="envKeeperApp.build.startTime">Start Time</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  ><span jhiTranslate="envKeeperApp.build.duration">Duration</span></th>
+                    <th scope="col"  jhiSortBy="buildName"><span jhiTranslate="envKeeperApp.build.buildName">Build Name</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="parentBuildId"><span jhiTranslate="envKeeperApp.build.parentBuild">Parent Build</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  width="200px"><span jhiTranslate="envKeeperApp.environment.home.title">Environments</span></th>
+                    <th scope="col"  width="200px" jhiSortBy="status"><span jhiTranslate="envKeeperApp.build.status">Status</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  width="250px" class="right-align"><fa-icon icon="filter" class="clickable" (click)="toggleFilter()" [class.selected]="filterEnabled"></fa-icon></th>
+                </tr>
+                <tr [hidden]="!filterEnabled">
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                    <th scope="col">
+                        <div>
+                            <select #environmentSelect class="form-control" name="status" id="field_environment" (change)='onEnvironmentSelected(environmentSelect.value)'>
+                                <option value=""></option>
+                                <option *ngFor="let environment of environments" value="{{ environment.id }}">{{ environment.shortName }}</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col">
+                        <div>
+                            <select #statusSelect class="form-control" name="status" id="field_status" (change)='onStatusSelected(statusSelect.value)'>
+                                <option value=""></option>
+                                <option *ngFor="let option of buildStatuses" value="{{ option }}" jhiTranslate="{{ 'envKeeperApp.BuildStatus.' + option }}">{{ option }}</option>
+                            </select>
+                        </div>
+                    </th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let build of builds ;trackBy: trackId">
+                    <td><a [routerLink]="['/build', build.id, 'view']">{{ build.id }}</a></td>
+                    <td>{{ build.startTime | date:'medium' }}</td>
+                    <td><span *ngIf="build.endTime">{{ prettyPrintIntervalMS(build.endTime.diff(build.startTime)) }}&nbsp;</span></td>
+                    <td>{{ build.buildName }}</td>
+                    <td>
+                        <div *ngIf="build.parentBuildId">
+                            <a [routerLink]="['/build', build.parentBuildId , 'view']" >{{ build.parentBuildId }}</a>
+                        </div>
+                    </td>
+                    <td><div *ngIf="build.deployments && build.deployments.length > 0"><a [routerLink]="['/environment', build.deployments[0].environmentId, 'view']">{{ build.deployments[0].environmentShortName }}</a></div></td>
+                    <td><span class="status status-{{ build.status }}" jhiTranslate="{{ 'envKeeperApp.BuildStatus.' + build.status }}">{{ build.status }}</span></td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/build', build.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit"
+                                    [routerLink]="['/build', build.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit" (click)="delete(build)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="builds && builds.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="builds?.length === 0">
+        <span jhiTranslate="envKeeperApp.build.home.notFound">No builds found</span>
+    </div>
+
+</div>

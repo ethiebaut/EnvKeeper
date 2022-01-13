@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "envkeeper.fullname" . }}-postgresql
+  labels:
+    app: {{ include "envkeeper.name" . }}-postgresql
+    chart: {{ include "envkeeper.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+type: Opaque
+data:
+  postgresql-password: {{ .Values.pgSecret | b64enc }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "envkeeper.fullname" . }}-postgresql-pvc
+  labels:
+    app: {{ include "envkeeper.name" . }}-postgresql
+    chart: {{ include "envkeeper.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  storageClassName: managed-premium
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "envkeeper.fullname" . }}-postgresql
+  labels:
+    app: {{ include "envkeeper.name" . }}-postgresql
+    chart: {{ include "envkeeper.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ include "envkeeper.fullname" . }}-postgresql
+  template:
+    metadata:
+      labels:
+        app: {{ include "envkeeper.fullname" . }}-postgresql
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "envkeeper.fullname" . }}-postgresql-pvc
+      containers:
+        - name: postgres
+          image: postgres:12.3
+          env:
+            - name: POSTGRES_USER
+              value: EnvKeeper
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "envkeeper.fullname" . }}-postgresql
+                  key: postgresql-password
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '1Gi'
+              cpu: '1'
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "envkeeper.fullname" . }}-postgresql
+  labels:
+    app: {{ include "envkeeper.name" . }}-postgresql
+    chart: {{ include "envkeeper.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  selector:
+    app: {{ include "envkeeper.fullname" . }}-postgresql
+  ports:
+    - port: 5432

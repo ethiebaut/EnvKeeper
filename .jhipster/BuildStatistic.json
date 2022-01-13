@@ -1,0 +1,36 @@
+{
+  "name": "BuildStatistic",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "buildStatistic",
+      "relationshipValidateRules": "required",
+      "relationshipName": "build",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201027134026",
+  "entityTableName": "build_statistic",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

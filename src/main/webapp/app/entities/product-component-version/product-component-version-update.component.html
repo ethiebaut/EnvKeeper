@@ -1,0 +1,120 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-product-component-version-heading" jhiTranslate="envKeeperApp.productComponentVersion.home.createOrEditLabel">Create or edit a Product Component Version</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.version" for="field_version">Version</label>
+                    <input type="text" class="form-control" name="version" id="field_version"
+                           formControlName="version"/>
+                    <div *ngIf="editForm.get('version')!.invalid && (editForm.get('version')!.dirty || editForm.get('version')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('version')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.buildStatus" for="field_buildStatus">Build Status</label>
+                    <select class="form-control" name="buildStatus" formControlName="buildStatus" id="field_buildStatus">
+                        <option value="IN_PROGRESS">{{ 'envKeeperApp.BuildStatus.IN_PROGRESS' | translate }}</option>
+                        <option value="SUCCEEDED">{{ 'envKeeperApp.BuildStatus.SUCCEEDED' | translate }}</option>
+                        <option value="FAILED">{{ 'envKeeperApp.BuildStatus.FAILED' | translate }}</option>
+                    </select>
+                    <div *ngIf="editForm.get('buildStatus')!.invalid && (editForm.get('buildStatus')!.dirty || editForm.get('buildStatus')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('buildStatus')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.startTime" for="field_startTime">Start Time</label>
+                    <div class="d-flex">
+                        <input id="field_startTime" type="datetime-local" class="form-control" name="startTime" formControlName="startTime" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                    <div *ngIf="editForm.get('startTime')!.invalid && (editForm.get('startTime')!.dirty || editForm.get('startTime')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('startTime')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('startTime')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.endTime" for="field_endTime">End Time</label>
+                    <div class="d-flex">
+                        <input id="field_endTime" type="datetime-local" class="form-control" name="endTime" formControlName="endTime" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.buildUrl" for="field_buildUrl">Build Url</label>
+                    <input type="text" class="form-control" name="buildUrl" id="field_buildUrl"
+                           formControlName="buildUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.releaseNotes" for="field_releaseNotes">Release Notes</label>
+                    <textarea type="text" class="form-control" name="releaseNotes" id="field_releaseNotes"
+                              formControlName="releaseNotes"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.productComponentVersion.component" for="field_component">Component</label>
+                    <select class="form-control" id="field_component" name="component" formControlName="componentId">
+                        <option *ngIf="!editForm.get('componentId')!.value" [ngValue]="null" selected></option>
+                        <option [ngValue]="productComponentOption.id" *ngFor="let productComponentOption of productcomponents; trackBy: trackById">{{ productComponentOption.shortName }}</option>
+                    </select>
+                </div>
+                <div *ngIf="editForm.get('componentId')!.invalid && (editForm.get('componentId')!.dirty || editForm.get('componentId')!.touched)">
+                    <small class="form-text text-danger"
+                           *ngIf="editForm.get('componentId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

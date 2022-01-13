@@ -1,0 +1,23 @@
+# Sample Mail Configuration
+
+# Spring Boot mail properties
+spring.mail:
+    host: smtp.sendgrid.net
+    port: 465
+    username: apikey
+    password: TheSendgridSecret
+    properties.mail.smtp:
+        auth: true
+        ssl.enable: true
+
+# Specific JHipster mail properties
+jhipster:
+    mail:
+        base-url: http://localhost:8080
+        from: john.doe@gmail.com
+
+# Kafka
+kafka:
+    bootstrapAddress: my-build-notification.servicebus.windows.net:9093
+    eventHubsConnectionString: <connection string>
+    eventHubsName: build-notifications

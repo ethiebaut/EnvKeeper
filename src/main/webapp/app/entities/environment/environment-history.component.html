@@ -1,0 +1,181 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div>
+    <div *ngIf="environment">
+        <h2>{{ environment.fullName }} <span jhiTranslate="envKeeperApp.environment.history">History</span>
+        <span *ngIf="productName"> - {{ productName }} </span></h2>
+
+        <jhi-alert-error></jhi-alert-error>
+
+        <jhi-alert></jhi-alert>
+
+        <div class="alert alert-warning" id="no-result" *ngIf="deployments?.length === 0">
+            <span jhiTranslate="envKeeperApp.deployment.home.notFound">No deployments found</span>
+        </div>
+
+        <nav mat-tab-nav-bar>
+            <a mat-tab-link
+               *ngFor="let link of navLinks"
+               [routerLink]="'../../' + link.link"
+               [queryParams]="{ productId: (productId || '') }"
+               routerLinkActive #rla="routerLinkActive"
+               [active]="rla.isActive">
+                {{ link.label }}
+            </a>
+        </nav>
+
+        <br/>
+
+        <div *ngIf="activeLinkIndex === 0">
+            <div *ngIf="deployments && deployments.length > 0">
+
+                <div class="table-responsive" id="entity-list">
+                    <table class="table table-striped" aria-describedby="page-heading">
+                        <thead>
+                        <tr>
+                            <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.startTime">Start Time</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.productVersion">Product Version</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.user">User</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.status">Status</span></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let deployment of deployments">
+                            <td><a [routerLink]="['/deployment', deployment.id, 'view']">{{ deployment.id }}</a></td>
+                            <td>{{ deployment.startTime | date:'medium' }}</td>
+                            <td>
+                                <div *ngIf="deployment.productVersionId">
+                                    <a [routerLink]="['/product-version', deployment.productVersionId , 'view']" >{{ deployment.product?.shortName }} {{ prettyPrintVersion(deployment.productVersionVersion) }}</a>
+                                </div>
+                            </td>
+                            <td>{{ deployment.user }}</td>
+                            <td><span class="status status-{{ deployment.status }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + deployment.status }}">{{ deployment.status }}</span></td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button type="submit"
+                                            [routerLink]="['/deployment', deployment.id, 'view']"
+                                            class="btn btn-info btn-sm">
+                                        <fa-icon icon="eye"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                                    </button>
+
+                                    <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit"
+                                            [routerLink]="['/deployment', deployment.id, 'edit']"
+                                            class="btn btn-primary btn-sm">
+                                        <fa-icon icon="pencil-alt"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                                    </button>
+
+                                    <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit" (click)="delete(deployment)"
+                                            class="btn btn-danger btn-sm">
+                                        <fa-icon icon="times"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row justify-content-center">
+                    <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+                </div>
+
+                <div class="row justify-content-center">
+                    <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+                </div>
+            </div>
+
+        </div>
+        <div *ngIf="activeLinkIndex === 1">
+
+            <div *ngIf="deploymentTable && deploymentTable.length > 0">
+
+                <div class="table-responsive" id="entity-table">
+                    <table class="table table-striped" aria-describedby="page-heading">
+                        <thead>
+                        <tr>
+                            <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.startTime">Start Time</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.user">User</span></th>
+                            <th scope="col" *ngFor="let product of products"><span>{{ product.shortName }}</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.deployment.status">Status</span></th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let deploymentRow of deploymentTable">
+                            <td><a [routerLink]="['/deployment', deploymentRow.id, 'view']">{{ deploymentRow.id }}</a></td>
+                            <td>{{ deploymentRow.startTime | date:'medium' }}</td>
+                            <td>{{ deploymentRow.user }}</td>
+                            <td *ngFor="let deploymentTableCell of deploymentRow.deploymentTableCells">
+                                <span *ngIf="deploymentTableCell.productVersionId"><a [routerLink]="['/product-version', deploymentTableCell.productVersionId , 'view']" >{{ prettyPrintVersion(deploymentTableCell.productVersionVersion) }}</a></span>
+                            </td>
+                            <td><span class="status status-{{ deploymentRow.status }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + deploymentRow.status }}">{{ deploymentRow.status }}</span></td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button type="submit"
+                                            [routerLink]="['/deployment', deploymentRow.id, 'view']"
+                                            class="btn btn-info btn-sm">
+                                        <fa-icon icon="eye"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                                    </button>
+
+                                    <button type="submit"
+                                            [disabled]="!getUpdatedProduct(deploymentRow)"
+                                            [routerLink]="['/product-version', getUpdatedProduct(deploymentRow)?.productVersionId, 'delta']"
+                                            [queryParams]="{ from: getUpdatedProduct(deploymentRow)?.previousProductVersionId, product: getUpdatedProduct(deploymentRow)?.product?.id }"
+                                            class="btn btn-warning btn-sm">
+                                        <fa-icon icon="code"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="envKeeperApp.environment.releaseNotes">Notes</span>
+                                    </button>
+
+                                    <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit"
+                                            [routerLink]="['/deployment', deploymentRow.id, 'edit']"
+                                            class="btn btn-primary btn-sm">
+                                        <fa-icon icon="pencil-alt"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                                    </button>
+
+                                    <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit" (click)="delete(deploymentRow)"
+                                            class="btn btn-danger btn-sm">
+                                        <fa-icon icon="times"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row justify-content-center">
+                    <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+                </div>
+
+                <div class="row justify-content-center">
+                    <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

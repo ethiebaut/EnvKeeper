@@ -1,0 +1,169 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-ticket-heading" jhiTranslate="envKeeperApp.ticket.home.createOrEditLabel">Create or edit a Ticket</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.externalId" for="field_externalId">External Id</label>
+                    <input type="text" class="form-control" name="externalId" id="field_externalId"
+                           formControlName="externalId"/>
+                    <div *ngIf="editForm.get('externalId')!.invalid && (editForm.get('externalId')!.dirty || editForm.get('externalId')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('externalId')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.ticketType" for="field_ticketType">Ticket Type</label>
+                    <select class="form-control" name="ticketType" formControlName="ticketType" id="field_ticketType">
+                        <option value="BUG">{{ 'envKeeperApp.TicketType.BUG' | translate }}</option>
+                        <option value="EPIC">{{ 'envKeeperApp.TicketType.EPIC' | translate }}</option>
+                        <option value="STORY">{{ 'envKeeperApp.TicketType.STORY' | translate }}</option>
+                        <option value="TASK">{{ 'envKeeperApp.TicketType.TASK' | translate }}</option>
+                    </select>
+                    <div *ngIf="editForm.get('ticketType')!.invalid && (editForm.get('ticketType')!.dirty || editForm.get('ticketType')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('ticketType')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.summary" for="field_summary">Summary</label>
+                    <input type="text" class="form-control" name="summary" id="field_summary"
+                           formControlName="summary"/>
+                    <div *ngIf="editForm.get('summary')!.invalid && (editForm.get('summary')!.dirty || editForm.get('summary')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('summary')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.ticketUrl" for="field_ticketUrl">Ticket Url</label>
+                    <input type="text" class="form-control" name="ticketUrl" id="field_ticketUrl"
+                           formControlName="ticketUrl"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.priority" for="field_priority">Priority</label>
+                    <input type="text" class="form-control" name="priority" id="field_priority"
+                           formControlName="priority"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.status" for="field_status">Status</label>
+                    <input type="text" class="form-control" name="status" id="field_status"
+                           formControlName="status"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.created" for="field_created">Created</label>
+                    <div class="d-flex">
+                        <input id="field_created" type="datetime-local" class="form-control" name="created" formControlName="created" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                    <div *ngIf="editForm.get('created')!.invalid && (editForm.get('created')!.dirty || editForm.get('created')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('created')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('created')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.updated" for="field_updated">Updated</label>
+                    <div class="d-flex">
+                        <input id="field_updated" type="datetime-local" class="form-control" name="updated" formControlName="updated" placeholder="YYYY-MM-DD HH:mm"/>
+                    </div>
+                    <div *ngIf="editForm.get('updated')!.invalid && (editForm.get('updated')!.dirty || editForm.get('updated')!.touched)">
+                        <small class="form-text text-danger"
+                               *ngIf="editForm.get('updated')?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.get('updated')?.errors?.ZonedDateTimelocal" jhiTranslate="entity.validation.ZonedDateTimelocal">
+                            This field should be a date and time.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.reporter" for="field_reporter">Reporter</label>
+                    <input type="text" class="form-control" name="reporter" id="field_reporter"
+                           formControlName="reporter"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.assignee" for="field_assignee">Assignee</label>
+                    <input type="text" class="form-control" name="assignee" id="field_assignee"
+                           formControlName="assignee"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.description" for="field_description">Description</label>
+                    <textarea class="form-control" name="description" id="field_description"
+                              formControlName="description"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.affects" for="field_affects">Affects</label>
+                    <select class="form-control" id="field_affects" name="affects" formControlName="affectsId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="productVersionOption.id" *ngFor="let productVersionOption of productversions; trackBy: trackById">{{ productVersionOption.version }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="envKeeperApp.ticket.fixedIn" for="field_fixedIn">Fixed In</label>
+                    <select class="form-control" id="field_fixedIn" name="fixedIn" formControlName="fixedInId">
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="productVersionOption.id" *ngFor="let productVersionOption of productversions; trackBy: trackById">{{ productVersionOption.version }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

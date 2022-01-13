@@ -1,0 +1,95 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="ticket">
+            <h2><span jhiTranslate="envKeeperApp.ticket.detail.title">Ticket</span> {{ ticket.externalId }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="envKeeperApp.ticket.ticketType">Ticket Type</span></dt>
+                <dd>
+                    <span jhiTranslate="{{ 'envKeeperApp.TicketType.' + ticket.ticketType }}">{{ ticket.ticketType }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.summary">Summary</span></dt>
+                <dd>
+                    <span>{{ ticket.summary }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.ticketUrl">Ticket Url</span></dt>
+                <dd>
+                    <span> <a href="{{ ticket.ticketUrl }}" target="_blank">{{ ticket.ticketUrl }}</a></span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.priority">Priority</span></dt>
+                <dd>
+                    <span>{{ ticket.priority }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.status">Status</span></dt>
+                <dd>
+                    <span>{{ ticket.status }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.created">Created</span></dt>
+                <dd>
+                    <span>{{ ticket.created | date:'medium' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.updated">Updated</span></dt>
+                <dd>
+                    <span>{{ ticket.updated | date:'medium' }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.reporter">Reporter</span></dt>
+                <dd>
+                    <span>{{ ticket.reporter }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.assignee">Assignee</span></dt>
+                <dd>
+                    <span>{{ ticket.assignee }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.description">Description</span></dt>
+                <dd>
+                    <span><markdown [data]="ticket.description"></markdown></span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.affects">Affects</span></dt>
+                <dd>
+                    <div *ngIf="ticket.affectsId">
+                        <a [routerLink]="['/product-version', ticket.affectsId, 'view']">{{ ticket.affectsProductShortname }} {{ prettyPrintVersion(ticket.affectsVersion) }}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.ticket.fixedIn">Fixed In</span></dt>
+                <dd>
+                    <div *ngIf="ticket.fixedInId">
+                        <a [routerLink]="['/product-version', ticket.fixedInId, 'view']">{{ ticket.fixedInProductShortname }} {{ prettyPrintVersion(ticket.fixedInVersion) }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="button"
+                    [routerLink]="['/ticket', ticket.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

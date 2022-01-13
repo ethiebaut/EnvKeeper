@@ -1,0 +1,79 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="productVersions">
+
+            <div *ngFor="let productVersion of productVersions">
+                <h1><a [routerLink]="['/product-version', productVersion.id, 'view']">{{ productVersion.version}}</a></h1>
+                <div *ngIf="productVersion.releaseNotes" jhiTranslate="envKeeperApp.componentVersion.releaseNotes">Release Notes</div>
+                <dd *ngIf="productVersion.releaseNotes" class="markdown">
+                    <span><markdown [data]="productVersion.releaseNotes"></markdown></span>
+                </dd>
+
+                <dt><span jhiTranslate="envKeeperApp.productVersion.resolvedTickets">Resolved tickets</span></dt>
+
+                <div class="alert alert-warning" id="no-result2" *ngIf="!productVersion.fixedTickets || productVersion.fixedTickets.length === 0">
+                    <span jhiTranslate="envKeeperApp.ticket.home.notFound">No tickets found</span>
+                </div>
+
+                <div class="table-responsive" id="entities2" *ngIf="productVersion.fixedTickets && productVersion.fixedTickets.length > 0">
+                    <table class="table table-striped" aria-describedby="page-heading">
+                        <thead>
+                        <tr>
+                            <th scope="col" style="min-width: 120px;"><span jhiTranslate="global.field.id">ID</span></th>
+                            <th scope="col" style="min-width: 120px;"><span jhiTranslate="envKeeperApp.ticket.ticketType">Ticket Type</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.ticket.summary">Summary</span></th>
+                            <th scope="col"><span jhiTranslate="envKeeperApp.ticket.priority">Priority</span></th>
+                            <th scope="col" style="min-width: 180px;"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let ticket of productVersion.fixedTickets">
+                            <td><a [routerLink]="['/ticket', ticket.id, 'view']">{{ ticket.externalId }}</a></td>
+                            <td jhiTranslate="{{ 'envKeeperApp.TicketType.' + ticket.ticketType }}">{{ ticket.ticketType }}</td>
+                            <td>{{ ticket.summary }}</td>
+                            <td>{{ ticket.priority }}</td>
+                            <td class="text-right">
+                                <div class="btn-group">
+                                    <button type="submit"
+                                            [routerLink]="['/ticket', ticket.id, 'view']"
+                                            class="btn btn-info btn-sm">
+                                        <fa-icon icon="eye"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                                    </button>
+
+                                    <a  href="{{ ticket.ticketUrl }}"
+                                        target="_blank"
+                                        [class.disabled]="!ticket.ticketUrl"
+                                        class="btn btn-warning btn-sm">
+                                        <fa-icon icon="code"></fa-icon>
+                                        <span class="d-none d-md-inline" jhiTranslate="entity.action.open">Open</span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br/>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+{
+  "envKeeperApp": {
+    "deployment": {
+      "home": {
+        "title": "Deployments",
+        "createLabel": "Create a new Deployment",
+        "createOrEditLabel": "Create or edit a Deployment",
+        "notFound": "No Deployments found"
+      },
+      "created": "A new Deployment is created with identifier {{ param }}",
+      "updated": "A Deployment is updated with identifier {{ param }}",
+      "deleted": "A Deployment is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Deployment {{ id }}?"
+      },
+      "detail": {
+        "title": "Deployment"
+      },
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "user": "User",
+      "status": "Status",
+      "namespace": "Namespace",
+      "url": "Url",
+      "testUrl": "Test Url",
+      "productVersion": "Version",
+      "environment": "Env",
+      "build": "Build"
+    }
+  }
+}

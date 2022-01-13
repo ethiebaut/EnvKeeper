@@ -1,0 +1,4 @@
+apiVersion: v1
+description: EnvKeeper Chart
+name: envkeeper
+version: 1.0.0

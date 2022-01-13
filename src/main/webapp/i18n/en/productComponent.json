@@ -1,0 +1,24 @@
+{
+  "envKeeperApp": {
+    "productComponent": {
+      "home": {
+        "title": "Product Components",
+        "createLabel": "Create a new Product Component",
+        "createOrEditLabel": "Create or edit a Product Component",
+        "notFound": "No Product Components found"
+      },
+      "created": "A new Product Component is created with identifier {{ param }}",
+      "updated": "A Product Component is updated with identifier {{ param }}",
+      "deleted": "A Product Component is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Product Component {{ id }}?"
+      },
+      "detail": {
+        "title": "Product Component"
+      },
+      "shortName": "Short Name",
+      "fullName": "Full Name",
+      "description": "Description"
+    }
+  }
+}

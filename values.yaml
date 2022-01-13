@@ -1,0 +1,29 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: ""
+
+imagePullPolicy: Always
+
+rootDomain: "mydomain.com"
+
+jwtSecret: ""
+pgSecret: ""
+
+mailConfig:
+    spring:
+        mail:
+            host: smtp.sendgrid.net
+            port: 465
+            username: apikey
+            password: <your API key goes here>
+            properties:
+                mail:
+                    smtp:
+                        auth: true
+                        ssl:
+                            enable: true
+    jhipster:
+        mail:
+            baseUrl: https://envkeeper.mydomain.com
+            from: admin@mydomain.com

@@ -1,0 +1,111 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="environment">
+            <h2>{{ environment.fullName }}</h2>
+
+            <hr>
+
+            <jhi-alert-error></jhi-alert-error>
+
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="envKeeperApp.environment.shortName">Short Name</span></dt>
+                <dd>
+                    <span>{{ environment.shortName }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.environment.fullName">Full Name</span></dt>
+                <dd>
+                    <span>{{ environment.fullName }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.environment.description">Description</span></dt>
+                <dd>
+                    <span>{{ environment.description }}</span>
+                </dd>
+                <dt><span jhiTranslate="envKeeperApp.environment.environmentGroup">Environment Group</span></dt>
+                <dd>
+                    <div *ngIf="environment.environmentGroupId">
+                        <a [routerLink]="['/environment-group', environment.environmentGroupId, 'view']">{{ environment.environmentGroupShortName }}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <br/>
+            <br/>
+
+            <h5 id="page-heading">
+                <span jhiTranslate="envKeeperApp.environment.currentDeployments">Current Deployments</span>
+            </h5>
+
+            <div class="alert alert-warning" id="no-result" *ngIf="deployments?.length === 0">
+                <span jhiTranslate="envKeeperApp.deployment.home.notFound">No deployments found</span>
+            </div>
+
+            <div class="table-responsive" id="entities" *ngIf="deployments && deployments.length > 0">
+                <table class="table table-striped" aria-describedby="page-heading">
+                    <thead>
+                    <tr>
+                        <th scope="col"><span jhiTranslate="global.field.id">ID</span></th>
+                        <th scope="col"><span jhiTranslate="envKeeperApp.deployment.startTime">Start Time</span></th>
+                        <th scope="col"><span jhiTranslate="envKeeperApp.deployment.productVersion">Product Version</span></th>
+                        <th scope="col"><span jhiTranslate="envKeeperApp.deployment.url">URL</span></th>
+                        <th scope="col"><span jhiTranslate="envKeeperApp.deployment.testUrl">Test URL</span></th>
+                        <th scope="col"><span jhiTranslate="envKeeperApp.deployment.status">Status</span></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor="let deployment of deployments">
+                        <td><a [routerLink]="['/deployment', deployment.id, 'view']">{{ deployment.id }}</a></td>
+                        <td>{{ deployment.startTime | date:'short' }}</td>
+                        <td>
+                            <div *ngIf="deployment.productVersionId">
+                                <a [routerLink]="['/product-version', deployment.productVersionId , 'view']" >{{ deployment.product?.shortName }} {{ prettyPrintVersion(deployment.productVersionVersion) }}</a>
+                            </div>
+                        </td>
+                        <td><a href="{{ deployment.url }}" target="_blank">{{ deployment.url }}</a></td>
+                        <td><a href="{{ deployment.testUrl }}" target="_blank">{{ deployment.testUrl }}</a></td>
+                        <td><span class="status status-{{ deployment.status }}" jhiTranslate="{{ 'envKeeperApp.DeploymentStatus.' + deployment.status }}">{{ deployment.status }}</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <br/>
+            <br/>
+            <br/>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Back</span>
+            </button>
+
+            <button type="submit"
+                    [routerLink]="['/environment', environment.id, 'history']"
+                    class="btn btn-warning">
+                <fa-icon icon="history"></fa-icon>&nbsp;<span jhiTranslate="envKeeperApp.environment.history">History</span>
+            </button>
+
+            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="button"
+                    [routerLink]="['/environment', environment.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

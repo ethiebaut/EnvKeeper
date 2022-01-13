@@ -1,0 +1,29 @@
+{
+  "envKeeperApp": {
+    "productComponentVersion": {
+      "home": {
+        "title": "Product Component Versions",
+        "createLabel": "Create a new Product Component Version",
+        "createOrEditLabel": "Create or edit a Product Component Version",
+        "notFound": "No Product Component Versions found"
+      },
+      "created": "A new Product Component Version is created with identifier {{ param }}",
+      "updated": "A Product Component Version is updated with identifier {{ param }}",
+      "deleted": "A Product Component Version is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Product Component Version {{ id }}?"
+      },
+      "detail": {
+        "title": "Product Component Version"
+      },
+      "version": "Version",
+      "buildStatus": "Build Status",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "buildUrl": "Build Url",
+      "releaseNotes": "Release Notes",
+      "component": "Component",
+      "productVersion": "Product Version"
+    }
+  }
+}

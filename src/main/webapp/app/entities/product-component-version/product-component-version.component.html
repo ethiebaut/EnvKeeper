@@ -1,0 +1,100 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="envKeeperApp.productComponentVersion.home.title">Product Component Versions</span>
+
+        <button *jhiHasAnyAuthority="'ROLE_WRITER'" id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-product-component-version" [routerLink]="['/product-component-version/new']">
+            <fa-icon icon="plus"></fa-icon>
+            <span  jhiTranslate="envKeeperApp.productComponentVersion.home.createLabel">
+            Create a new Product Component Version
+            </span>
+        </button>
+    </h2>
+
+    <jhi-alert-error></jhi-alert-error>
+
+    <jhi-alert></jhi-alert>
+
+    <div class="alert alert-warning" id="no-result" *ngIf="productComponentVersions?.length === 0">
+        <span jhiTranslate="envKeeperApp.productComponentVersion.home.notFound">No productComponentVersions found</span>
+    </div>
+
+    <div class="table-responsive" id="entities" *ngIf="productComponentVersions && productComponentVersions.length > 0">
+        <table class="table table-striped" aria-describedby="page-heading">
+            <thead>
+                <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" [callback]="loadPage.bind(this)">
+                    <th scope="col"  jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="version"><span jhiTranslate="envKeeperApp.productComponentVersion.version">Version</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="buildStatus"><span jhiTranslate="envKeeperApp.productComponentVersion.buildStatus">Build Status</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="startTime"><span jhiTranslate="envKeeperApp.productComponentVersion.startTime">Start Time</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="endTime"><span jhiTranslate="envKeeperApp.productComponentVersion.endTime">End Time</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"  jhiSortBy="componentShortName"><span jhiTranslate="envKeeperApp.productComponentVersion.component">Component</span> <fa-icon icon="sort"></fa-icon></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let productComponentVersion of productComponentVersions ;trackBy: trackId">
+                    <td><a [routerLink]="['/product-component-version', productComponentVersion.id, 'view']">{{ productComponentVersion.id }}</a></td>
+                    <td>{{ productComponentVersion.version }}</td>
+                    <td jhiTranslate="{{ 'envKeeperApp.BuildStatus.' + productComponentVersion.buildStatus }}">{{ productComponentVersion.buildStatus }}</td>
+                    <td>{{ productComponentVersion.startTime | date:'medium' }}</td>
+                    <td>{{ productComponentVersion.endTime | date:'medium' }}</td>
+                    <td>
+                        <div *ngIf="productComponentVersion.componentId">
+                            <a [routerLink]="['/product-component', productComponentVersion.componentId , 'view']" >{{ productComponentVersion.componentShortName }}</a>
+                        </div>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group">
+                            <button type="submit"
+                                    [routerLink]="['/product-component-version', productComponentVersion.id, 'view']"
+                                    class="btn btn-info btn-sm">
+                                <fa-icon icon="eye"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit"
+                                    [routerLink]="['/product-component-version', productComponentVersion.id, 'edit']"
+                                    class="btn btn-primary btn-sm">
+                                <fa-icon icon="pencil-alt"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                            </button>
+
+                            <button *jhiHasAnyAuthority="'ROLE_WRITER'" type="submit" (click)="delete(productComponentVersion)"
+                                    class="btn btn-danger btn-sm">
+                                <fa-icon icon="times"></fa-icon>
+                                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="productComponentVersions && productComponentVersions.length > 0">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="ngbPaginationPage" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage($event)"></ngb-pagination>
+        </div>
+    </div>
+</div>

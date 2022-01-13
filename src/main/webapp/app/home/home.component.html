@@ -1,0 +1,147 @@
+<!--
+  ~ Copyright (c) 2022 Eric Thiebaut-George.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  ~
+  -->
+
+<div class="row">
+    <div class="col-md-12">
+        <h2 id="page-heading" jhiTranslate="home.title">
+            <span>Environments</span>
+        </h2>
+
+        <div [ngSwitch]="isAuthenticated()">
+            <div class="alert alert-warning" *ngSwitchCase="false">
+                <a class="alert-link" (click)="login()" jhiTranslate="global.messages.info.authenticated.link">sign in</a>
+                <br/>
+                <span jhiTranslate="global.messages.info.register.noaccount">You don't have an account yet?</span>&nbsp;
+                <a class="alert-link" routerLink="/account/register" jhiTranslate="global.messages.info.register.link">Register a new account</a>
+            </div>
+
+            <div *ngSwitchCase="true">
+
+                <form name="filterForm" role="form" novalidate [formGroup]="filterForm">
+                    <nav mat-tab-nav-bar>
+                        <a mat-tab-link
+                           *ngFor="let link of navLinks"
+                           [routerLink]="link.link"
+                           [queryParams]="{asOf: this.filterForm.get(['asOfTime'])!.value}"
+                           routerLinkActive #rla="routerLinkActive"
+                           [active]="rla.isActive">
+                            {{ link.label }}
+                        </a>
+                        <div class="container as-of ">
+                            <span class="vertical-center">
+                                <p class="no-margin">As of:</p>
+                                <input id="field_asOfTime" (change)="update()" type="datetime-local" class="form-control" name="startTime" formControlName="asOfTime" placeholder="YYYY-MM-DD HH:mm"/>
+                            </span>
+                        </div>
+                    </nav>
+                </form>
+
+                <div *ngIf="activeLinkIndex === 0" cdkDropList [cdkDropListDisabled]="!isWriter" (cdkDropListDropped)="onEnvironmentGroupsSorted($event)">
+                    <div class="environment-group" *ngFor="let environmentGroup of environmentGroups" cdkDrag>
+                        <h4 cdkDragHandle [class.sortable]="isWriter">{{ environmentGroup.fullName }}</h4>
+                        <div class="row">
+                            <div class="col-lg-3" *ngFor="let environment of getEnvironments(environmentGroup.shortName)"
+                                 ngSortgridItem
+                                 [class.sortable]="isWriter"
+                                 [ngSortGridItems]="getEnvironments(environmentGroup.shortName)"
+                                 [ngSortGridGroup]="environmentGroup.shortName || ''"
+                                 [autoScroll]="true" [scrollSpeed]="100"
+                                 (sorted)="onEnvironmentsSorted($event)"
+                                 #environmentGrid>
+                                <div class="environment">
+                                    <div class="environment-right">
+                                        <a href="#" (click)="copyTags(environment)"><img alt="History" src="/content/images/copy.png"/></a>
+                                        <a [routerLink]="['/environment', environment.id, 'history']" [queryParams]="{ productId: '' }"><img alt="History" src="/content/images/history.png"/></a>
+                                    </div>
+                                    <h5><a [routerLink]="['/environment', environment.id, 'view']">{{ environment.fullName }}</a></h5>
+                                    <div class="body" *ngFor="let product of getProducts(environmentGroup.shortName)">
+                                        <div class="left">
+                                            <div class="circle alert-info">{{ product.initials }}</div>
+                                        </div>
+                                        <div class="right">
+                                            <a [routerLink]="['/environment', environment.id, 'history']" [queryParams]="{productId: product.id}"><img alt="History" src="/content/images/history.png"/></a>
+                                        </div>
+                                        <div class="middle">
+                                            <div class="title">
+                                                <a [routerLink]="['/product', product.id, 'view']">{{ product.fullName }}</a>:
+                                                <span class="version" *ngIf="latestDeployments.get(environment.shortName + '|' + product.shortName) != null">
+                                            <a [routerLink]="['/product-version', latestDeployments.get(environment.shortName + '|' + product.shortName)?.productVersionId, 'view']">{{ prettyPrintVersion(latestDeployments.get(environment.shortName + "|" + product.shortName)?.productVersionVersion) }}</a>
+                                        </span>
+                                                <span class="version" *ngIf="latestDeployments.get(environment.shortName + '|' + product.shortName) == null" jhiTranslate="home.notDeployed">
+                                            Not deployed
+                                        </span>
+                                            </div>
+                                            <div class="timestamp" *ngIf="latestDeployments.get(environment.shortName + '|' + product.shortName) != null">
+                                                <a [routerLink]="['/deployment', latestDeployments.get(environment.shortName + '|' + product.shortName)?.id, 'view']">{{ latestDeployments.get(environment.shortName + "|" + product.shortName)?.startTime | date:'medium' }}</a>&nbsp;
+                                            </div>
+                                            <div class="timestamp" *ngIf="latestDeployments.get(environment.shortName + '|' + product.shortName) == null">
+                                                &nbsp;
+                                            </div>
+                                            <div class="user">
+                                                <div class="links">
+                                                    <a href="{{latestDeployments.get(environment.shortName + '|' + product.shortName)?.url}}" target="_blank" *ngIf='latestDeployments.get(environment.shortName + "|" + product.shortName)?.url !== null'>
+                                                        <span class="web-link alert-primary">HTML</span>
+                                                    </a>
+                                                    <a href="{{latestDeployments.get(environment.shortName + '|' + product.shortName)?.testUrl}}" target="_blank" *ngIf='latestDeployments.get(environment.shortName + "|" + product.shortName)?.testUrl !== null'>
+                                                        <span class="test-link alert-primary">Test</span>
+                                                    </a>
+                                                </div>
+                                                <div class="username">
+                                                    <span>{{ latestDeployments.get(environment.shortName + "|" + product.shortName)?.user }}&nbsp;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="activeLinkIndex === 1">
+                    <div class="environment-group" *ngFor="let environmentGroup of environmentGroups" cdkDrag>
+                        <h4 cdkDragHandle [class.sortable]="isWriter">{{ environmentGroup.fullName }}</h4>
+                        <div class="row">
+                            <div class="table-responsive" id="entities">
+                                <table class="table table-striped" aria-describedby="page-heading">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><span jhiTranslate="home.product">Product</span></th>
+                                            <th scope="col" *ngFor="let environment of getEnvironments(environmentGroup.shortName)"><span>{{ environment.shortName }} <a [routerLink]="['/environment', environment.id, 'history']"><img alt="History" src="/content/images/history.png"/></a></span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let product of getProducts(environmentGroup.shortName)">
+                                            <td><a [routerLink]="['/product', product.id, 'view']">{{ product.shortName }}</a></td>
+                                            <td scope="col" *ngFor="let environment of getEnvironments(environmentGroup.shortName)">
+                                                <span class="version" *ngIf="latestDeployments.get(environment.shortName + '|' + product.shortName) != null">
+                                                    <a [routerLink]="['/product-version', latestDeployments.get(environment.shortName + '|' + product.shortName)?.productVersionId, 'view']">{{
+                                                        prettyPrintVersion(latestDeployments.get(environment.shortName + "|" + product.shortName)?.productVersionVersion) }}</a> <a [routerLink]="['/environment', environment.id, 'history']" [queryParams]="{productId:product.id}"><img alt="History" src="/content/images/history.png"/></a><br/>
+                                                    <a class="smalldate" [routerLink]="['/deployment', latestDeployments.get(environment.shortName + '|' + product.shortName)?.id, 'view']">{{
+                                                        latestDeployments.get(environment.shortName + "|" + product.shortName)?.startTime | date:'short' }}</a>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

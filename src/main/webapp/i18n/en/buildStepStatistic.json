@@ -1,0 +1,24 @@
+{
+  "envKeeperApp": {
+    "buildStepStatistic": {
+      "home": {
+        "title": "Build Step Statistics",
+        "createLabel": "Create a new Build Step Statistic",
+        "createOrEditLabel": "Create or edit a Build Step Statistic",
+        "notFound": "No Build Step Statistics found"
+      },
+      "created": "A new Build Step Statistic is created with identifier {{ param }}",
+      "updated": "A Build Step Statistic is updated with identifier {{ param }}",
+      "deleted": "A Build Step Statistic is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Build Step Statistic {{ id }}?"
+      },
+      "detail": {
+        "title": "Build Step Statistic"
+      },
+      "key": "Key",
+      "value": "Value",
+      "buildStep": "Build Step"
+    }
+  }
+}

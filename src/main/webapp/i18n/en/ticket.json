@@ -1,0 +1,34 @@
+{
+  "envKeeperApp": {
+    "ticket": {
+      "home": {
+        "title": "Tickets",
+        "createLabel": "Create a new Ticket",
+        "createOrEditLabel": "Create or edit a Ticket",
+        "notFound": "No Tickets found"
+      },
+      "created": "A new Ticket is created with identifier {{ param }}",
+      "updated": "A Ticket is updated with identifier {{ param }}",
+      "deleted": "A Ticket is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Ticket {{ id }}?"
+      },
+      "detail": {
+        "title": "Ticket"
+      },
+      "externalId": "External Id",
+      "ticketType": "Ticket Type",
+      "summary": "Summary",
+      "ticketUrl": "Ticket Url",
+      "priority": "Priority",
+      "status": "Status",
+      "created": "Created",
+      "updated": "Updated",
+      "reporter": "Reporter",
+      "assignee": "Assignee",
+      "description": "Description",
+      "affects": "Affects",
+      "fixedIn": "Fixed In"
+    }
+  }
+}

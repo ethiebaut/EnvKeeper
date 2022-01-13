@@ -1,0 +1,36 @@
+{
+  "name": "BuildStepStatistic",
+  "fields": [
+    {
+      "fieldName": "key",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "value",
+      "fieldType": "Long",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "buildStep",
+      "otherEntityRelationshipName": "buildStepStatistic",
+      "relationshipValidateRules": "required",
+      "relationshipName": "buildStep",
+      "otherEntityField": "step"
+    }
+  ],
+  "changelogDate": "20201028211509",
+  "entityTableName": "build_step_statistic",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

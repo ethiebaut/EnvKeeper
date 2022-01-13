@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{ include "envkeeper.fullname" . }}-vs
+  labels:
+    app: {{ include "envkeeper.name" . }}
+    chart: {{ include "envkeeper.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+  namespace: istio-system
+spec:
+  gateways:
+  - istio-gateway
+  hosts:
+  - envkeeper.{{ .Values.rootDomain }}
+  http:
+  - headers:
+      response:
+        add:
+          Strict-Transport-Security: max-age=86400
+    match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: {{ include "envkeeper.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+        port:
+          number: 8080

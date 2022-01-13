@@ -1,0 +1,34 @@
+{
+  "envKeeperApp": {
+    "build": {
+      "home": {
+        "title": "Builds",
+        "createLabel": "Create a new Build",
+        "createOrEditLabel": "Create or edit a Build",
+        "notFound": "No Builds found"
+      },
+      "created": "A new Build is created with identifier {{ param }}",
+      "updated": "A Build is updated with identifier {{ param }}",
+      "deleted": "A Build is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Build {{ id }}?"
+      },
+      "detail": {
+        "title": "Build"
+      },
+      "buildUrl": "Build Url",
+      "buildName": "Build Name",
+      "status": "Status",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "build": "Build",
+      "parentBuild": "Parent Build",
+      "noParentBuild": "No Parent Build",
+      "childBuilds": "Child Builds",
+      "deployment": "Deployment",
+      "deployments": "Deployments",
+      "productVersion": "Product Version"
+    }
+  }
+}

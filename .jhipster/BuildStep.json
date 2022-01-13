@@ -1,0 +1,46 @@
+{
+  "name": "BuildStep",
+  "fields": [
+    {
+      "fieldName": "step",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "BuildStatus",
+      "fieldValues": "IN_PROGRESS,SUCCEEDED,FAILED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endTime",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "buildStep",
+      "relationshipValidateRules": "required",
+      "relationshipName": "build",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20201028190635",
+  "entityTableName": "build_step",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

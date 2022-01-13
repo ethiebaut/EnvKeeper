@@ -1,0 +1,13 @@
+{
+  "envKeeperApp": {
+    "DeploymentStatus": {
+      "null": "",
+      "IN_PROGRESS": "IN_PROGRESS",
+      "DELETED": "DELETED",
+      "SUCCEEDED": "SUCCEEDED",
+      "FAILED_KEPT": "FAILED_KEPT",
+      "FAILED_ROLLED_BACK": "FAILED_ROLLED_BACK",
+      "VERIFIED": "VERIFIED"
+    }
+  }
+}

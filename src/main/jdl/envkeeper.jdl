@@ -1,0 +1,143 @@
+enum BuildStatus {
+    IN_PROGRESS,
+    SUCCEEDED,
+    FAILED
+}
+
+enum DeploymentStatus {
+    IN_PROGRESS,
+    DELETED,
+    SUCCEEDED,
+    FAILED_KEPT,
+    FAILED_ROLLED_BACK,
+    VERIFIED
+}
+
+enum TicketType {
+    BUG,
+    EPIC,
+    STORY,
+    TASK
+}
+
+entity EnvironmentGroup {
+    shortName String required
+    fullName String required
+    description String required
+    sortOrder Integer
+    hidden Boolean required
+}
+
+entity Environment {
+    shortName String required
+    fullName String required
+    description String required
+    sortOrder Integer
+}
+
+entity Product {
+    shortName String required
+    fullName String required
+    description String required
+}
+
+entity Build {
+    buildUrl String required
+    buildName String
+    status BuildStatus required
+    startTime Instant required
+    endTime Instant
+}
+
+entity BuildStatistic {
+    key String required
+    value Long required
+}
+
+entity BuildStepStatistic {
+    key String required
+    value Long required
+}
+
+entity BuildStep {
+    step String required
+    status BuildStatus required
+    startTime Instant required
+    endTime Instant
+}
+
+entity ProductVersion {
+    version String required
+    releaseNotes String
+}
+
+entity Deployment {
+    startTime Instant required
+    endTime Instant
+    user String
+    status DeploymentStatus required
+    namespace String
+    url String
+    testUrl String
+}
+
+entity ProductComponent {
+    shortName String required
+    fullName String required
+    description String required
+}
+
+entity ProductComponentVersion {
+    version String required
+    buildStatus BuildStatus required
+    startTime Instant required
+    endTime Instant
+    buildUrl String
+    releaseNotes String
+}
+
+entity Ticket {
+    externalId String required
+    ticketType TicketType required
+    summary String required
+    ticketUrl String
+    priority String
+    status String
+    created Instant required
+    updated Instant required
+    reporter String
+    assignee String
+    description TextBlob
+}
+
+relationship ManyToOne {
+    Environment{environmentGroup(shortName) required} to EnvironmentGroup
+    ProductVersion{product(shortName) required} to Product
+
+    Deployment{productVersion(version) required} to ProductVersion
+    Deployment{environment(shortName) required} to Environment
+
+    ProductComponentVersion{component(shortName) required} to ProductComponent
+
+    Deployment to Build{deployment(startTime)}
+    ProductVersion to Build{productVersion(version)}
+    BuildStatistic{build required} to Build
+    BuildStep{build required} to Build
+    BuildStepStatistic{buildStep(step) required} to BuildStep
+
+    Ticket{affects(version)} to ProductVersion
+    Ticket{fixedIn(version)} to ProductVersion
+}
+
+relationship OneToMany {
+    Build to Build{parentBuild}
+}
+
+relationship ManyToMany {
+    ProductVersion{component(version)} to ProductComponentVersion{productVersion(version)}
+}
+
+paginate * with pagination
+dto * with mapstruct
+service * with serviceClass
+filter *

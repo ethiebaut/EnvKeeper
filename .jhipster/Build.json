@@ -1,0 +1,67 @@
+{
+  "name": "Build",
+  "fields": [
+    {
+      "fieldName": "buildUrl",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "buildName",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "status",
+      "fieldType": "BuildStatus",
+      "fieldValues": "IN_PROGRESS,SUCCEEDED,FAILED",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "startTime",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "endTime",
+      "fieldType": "Instant"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "parentBuild",
+      "relationshipName": "build"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "build",
+      "otherEntityRelationshipName": "build",
+      "relationshipName": "parentBuild",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "deployment",
+      "otherEntityRelationshipName": "build",
+      "relationshipName": "deployment"
+    },
+    {
+      "relationshipType": "one-to-many",
+      "otherEntityName": "productVersion",
+      "otherEntityRelationshipName": "build",
+      "relationshipName": "productVersion"
+    }
+  ],
+  "changelogDate": "20201027133926",
+  "entityTableName": "build",
+  "dto": "mapstruct",
+  "pagination": "pagination",
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

@@ -1,0 +1,27 @@
+{
+  "envKeeperApp": {
+    "buildStep": {
+      "home": {
+        "title": "Build Steps",
+        "createLabel": "Create a new Build Step",
+        "createOrEditLabel": "Create or edit a Build Step",
+        "notFound": "No Build Steps found"
+      },
+      "created": "A new Build Step is created with identifier {{ param }}",
+      "updated": "A Build Step is updated with identifier {{ param }}",
+      "deleted": "A Build Step is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Build Step {{ id }}?"
+      },
+      "detail": {
+        "title": "Build Step"
+      },
+      "step": "Step",
+      "status": "Status",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration",
+      "build": "Build"
+    }
+  }
+}
