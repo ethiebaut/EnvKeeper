@@ -1,5 +1,9 @@
 # EnvKeeper
 
+Manage all your applications and environments in a central dashboard.
+
+<img src="./EnvKeeper.png" alt="EnvKeeper Dashboard"  width="588" height="372">
+
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
 
 ## TLDR / to install
@@ -13,6 +17,7 @@ This application was generated using JHipster 6.10.3, you can find documentation
 ./install.sh
 ```
 
+Log in with admin/admin or user/user. 
 
 ### With Azure Event Hubs integration
 1. In your Azure subscription, create a ``my-azure-rg`` Azure resource group, ``build-notification`` Event Hubs namespace, ``listener`` Listen access policy, and ``build-notifications`` Event Hub.
@@ -29,6 +34,8 @@ export EH_HUB_NAME=build-notifications
 ```shell
 ./install.sh
 ```
+
+Log in with admin/admin or user/user.
 
 ## Development
 
