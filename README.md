@@ -99,7 +99,20 @@ Then run:
 docker-compose -f src/main/docker/app.yml up -d
 ```
 
-## How to create a product version by using the API
+## Integrating with third party systems
+
+EnvKeeper has the concepts of builds, component version, product versions, deployments and tickets.
+Therefore, it is ideally integrated with your build, deployment and ticket systems.
+
+Two APIs are provided:
+* A REST API (with full swagger UI for easy development)
+* An Event Hubs / Kafka API
+
+### Using the REST API
+
+Full swagger UI is available (log in as admin). A couple of examples follow.
+
+#### How to create a product version by using the API
 Post the following to /api/product-versions:
 
 ```
@@ -123,7 +136,7 @@ Post the following to /api/product-versions:
 Another /api/product-versions/bulk also exists in order to upload several product versions.
 
 
-## How to create a deployment by using the API
+#### How to create a deployment by using the API
 Post the following to /api/deployments:
 
 ```
@@ -155,9 +168,11 @@ FAILED_KEPT
 FAILED_ROLLED_BACK
 ```
 
-## To send a test payload
+### Integrating with the Event Hubs / Kafka API
 
-Update ```application.yaml``` with the following settings (at the top level):
+First make sure that you created the Event Hub and enabled it as detailed at the top of this document.
+
+If running locally, you will need to update ```application.yaml``` with the following settings (at the top level):
 ```yaml
 kafka:
   bootstrapAddress: <EventHubNamespaceHost>:9093
@@ -171,12 +186,14 @@ export SPRING_PROFILES_ACTIVE=dev,swagger,kafka
 mvn
 ```
 
-And the you can run in another window (make sure you update the urls in ``TOKEN`` and ``URL``):
+#### To send a test payload
+
+Make sure you update the urls in ``TOKEN`` and ``URL`` in the first two lines below.
+A few example files have been provided as payload examples.
 
 ```shell
 TOKEN=`az account get-access-token --resource=https://my-build-notification-ehns.servicebus.windows.net --query accessToken --output tsv`
 URL="https://my-build-notification-ehns.servicebus.windows.net/my-build-notifications-eh/messages?timeout=60&api-version=2014-01"
-
 
 curl -v -X POST ${URL} \
  -H "Authorization: Bearer ${TOKEN}" \
