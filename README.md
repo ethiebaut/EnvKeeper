@@ -164,14 +164,11 @@ export SPRING_PROFILES_ACTIVE=dev,swagger,kafka
 mvn
 ```
 
-And the you can run in another window:
+And the you can run in another window (make sure you update the urls in ``TOKEN`` and ``URL``):
 
 ```shell
-TOKEN=`az account get-access-token --resource=https://build-notification.servicebus.windows.net --query accessToken --output tsv`
--- Prod
-URL="https://build-notification.servicebus.windows.net/build-notifications/messages?timeout=60&api-version=2014-01"
--- Dev
-URL="https://build-notification.servicebus.windows.net/build-notifications-dev/messages?timeout=60&api-version=2014-01"
+TOKEN=`az account get-access-token --resource=https://my-build-notification-ehns.servicebus.windows.net --query accessToken --output tsv`
+URL="https://my-build-notification-ehns.servicebus.windows.net/my-build-notifications-eh/messages?timeout=60&api-version=2014-01"
 
 
 curl -v -X POST ${URL} \
