@@ -6,16 +6,17 @@ Manage all your applications and environments in a central dashboard.
 
 This application was generated using JHipster 6.10.3, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v6.10.3](https://www.jhipster.tech/documentation-archive/v6.10.3).
 
-## TLDR / to install
+## TLDR / to install on Kubernetes
 
 ### Without Azure Event Hubs Integration
 1. Set SPRING_PROFILES_ACTIVE to ``prod,swagger`` or just ``prod`` in ``charts/envkeeper/templates/envkeeper-deployment.yml``.
 2. Comment out setting ``EH_CNX_STRING`` in ``install.sh``
-3. Update values.yaml
+3. Update values.yaml (don't forget to update the persistent storage class)
 4. Run:
 ```shell
 ./install.sh
 ```
+This will install EnvKeeper in the current Kubernetes Namespace.
 
 Log in with admin/admin or user/user. 
 
@@ -29,11 +30,12 @@ export EH_HUB_NS_NAME=build-notification
 export EH_HUB_NS_ACCESS_POLICY=listener
 export EH_HUB_NAME=build-notifications
 ```
-3. Update values.yaml
+3. Update values.yaml (don't forget to update the persistent storage class)
 4. Run:
 ```shell
 ./install.sh
 ```
+This will install EnvKeeper in the current Kubernetes Namespace.
 
 Log in with admin/admin or user/user.
 

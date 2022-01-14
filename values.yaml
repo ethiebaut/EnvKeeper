@@ -3,6 +3,8 @@ replicaCount: 1
 nameOverride: ""
 fullnameOverride: ""
 
+storageClassName: microk8s-hostpath
+
 imagePullPolicy: Always
 
 rootDomain: "mydomain.com"

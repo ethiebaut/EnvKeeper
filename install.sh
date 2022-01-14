@@ -37,7 +37,7 @@ EH_CNX_STRING=`az eventhubs eventhub authorization-rule keys list --subscription
 
 echo Installing Helm chart
 cd charts
-helm install envkeeper -f ../values.yaml --set "jwtSecret=$JWT_PASS" --set "pgSecret=$PG_PASS" \
+helm install envkeeper envkeeper -f ../values.yaml --set "jwtSecret=$JWT_PASS" --set "pgSecret=$PG_PASS" \
     --set "eventHubsLocation=EH_URL" --set "eventHubsName=EH_HUB_NAME" --set "eventHubsConnectionString=EH_CNX_STRING"
 
 retVal=$?
