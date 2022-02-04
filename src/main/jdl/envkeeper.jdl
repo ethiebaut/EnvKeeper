@@ -1,7 +1,8 @@
 enum BuildStatus {
     IN_PROGRESS,
     SUCCEEDED,
-    FAILED
+    FAILED,
+    ABORTED
 }
 
 enum DeploymentStatus {

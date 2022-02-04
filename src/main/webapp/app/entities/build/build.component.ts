@@ -49,7 +49,7 @@ export class BuildComponent implements OnInit, AfterViewInit, OnDestroy {
   filterEnabled = false;
   selectedEnvironmentId?: number;
   selectedStatus?: string;
-  buildStatuses = ["IN_PROGRESS", "SUCCEEDED", "FAILED"];
+  buildStatuses = ["IN_PROGRESS", "SUCCEEDED", "FAILED", "ABORTED"];
   pageLoadRequestNumber = 0;
 
   @ViewChild('environmentSelect', {static: false})

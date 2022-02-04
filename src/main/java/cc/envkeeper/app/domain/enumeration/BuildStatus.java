@@ -21,5 +21,5 @@ package cc.envkeeper.app.domain.enumeration;
  * The BuildStatus enumeration.
  */
 public enum BuildStatus {
-    IN_PROGRESS, SUCCEEDED, FAILED
+    IN_PROGRESS, SUCCEEDED, FAILED, ABORTED
 }

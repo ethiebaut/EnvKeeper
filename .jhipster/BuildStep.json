@@ -9,7 +9,7 @@
     {
       "fieldName": "status",
       "fieldType": "BuildStatus",
-      "fieldValues": "IN_PROGRESS,SUCCEEDED,FAILED",
+      "fieldValues": "IN_PROGRESS,SUCCEEDED,FAILED,ABORTED",
       "fieldValidateRules": ["required"]
     },
     {

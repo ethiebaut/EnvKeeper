@@ -21,4 +21,6 @@ export const enum BuildStatus {
   SUCCEEDED = 'SUCCEEDED',
 
   FAILED = 'FAILED',
+
+  ABORTED = 'ABORTED',
 }

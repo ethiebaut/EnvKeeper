@@ -220,7 +220,7 @@ Status
   color: rgb(23, 43, 77);
 }
 
-.status-FAILED, .status-FAILED_ROLLED_BACK, .status-FAILED_KEPT {
+.status-FAILED, .status-FAILED_ROLLED_BACK, .status-FAILED_KEPT, .status-ABORTED {
   background-color: rgb(255, 235, 230);
   border-color: rgb(255, 235, 230);
   color: rgb(191, 38, 0);

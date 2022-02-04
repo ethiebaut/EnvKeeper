@@ -52,6 +52,7 @@
                         <option value="IN_PROGRESS">{{ 'envKeeperApp.BuildStatus.IN_PROGRESS' | translate }}</option>
                         <option value="SUCCEEDED">{{ 'envKeeperApp.BuildStatus.SUCCEEDED' | translate }}</option>
                         <option value="FAILED">{{ 'envKeeperApp.BuildStatus.FAILED' | translate }}</option>
+                        <option value="ABORTED">{{ 'envKeeperApp.BuildStatus.ABORTED' | translate }}</option>
                     </select>
                     <div *ngIf="editForm.get('status')!.invalid && (editForm.get('status')!.dirty || editForm.get('status')!.touched)">
                         <small class="form-text text-danger"
