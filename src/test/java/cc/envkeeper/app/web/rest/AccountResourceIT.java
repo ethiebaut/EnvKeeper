@@ -414,7 +414,7 @@ public class AccountResourceIT {
 
     @Test
     @Transactional
-    public void testActivateAccount() throws Exception {
+    public void testActivateAccountWithWrongCaptcha() throws Exception {
         final String activationKey = "some activation key";
         User user = new User();
         user.setLogin("activate-account");
@@ -425,17 +425,20 @@ public class AccountResourceIT {
 
         userRepository.saveAndFlush(user);
 
-        restAccountMockMvc.perform(get("/api/activate?key={activationKey}", activationKey))
-            .andExpect(status().isOk());
+        // Should be 200 but will be 500 because of the incorrect captcha
+        restAccountMockMvc.perform(get("/api/activate?key={activationKey}&captcha=1234", activationKey))
+            .andExpect(status().isInternalServerError());
 
         user = userRepository.findOneByLogin(user.getLogin()).orElse(null);
-        assertThat(user.getActivated()).isTrue();
+
+        // Again, this should be True if the captcha was correct
+        assertThat(user.getActivated()).isFalse();
     }
 
     @Test
     @Transactional
     public void testActivateAccountWithWrongKey() throws Exception {
-        restAccountMockMvc.perform(get("/api/activate?key=wrongActivationKey"))
+        restAccountMockMvc.perform(get("/api/activate?key=wrongActivationKey&captcha=1234"))
             .andExpect(status().isInternalServerError());
     }
 

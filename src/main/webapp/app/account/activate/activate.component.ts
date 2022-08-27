@@ -38,7 +38,11 @@ export class ActivateComponent implements OnInit {
       () => (this.success = true),
       err => {
         this.error = true;
-        this.message = err.error.detail;
+        if (err.error) {
+          this.message = err.error.detail;
+        } else {
+          this.message = 'Unknown error';
+        }
       }
     );
   }

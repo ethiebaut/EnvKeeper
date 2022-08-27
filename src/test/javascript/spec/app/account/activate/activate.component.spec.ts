@@ -56,7 +56,7 @@ describe('Component Tests', () => {
         comp.ngOnInit();
         tick();
 
-        expect(service.get).toHaveBeenCalledWith('ABC123');
+        expect(service.get).toHaveBeenCalledWith('ABC123', undefined);
       })
     ));
 
@@ -73,7 +73,7 @@ describe('Component Tests', () => {
       })
     ));
 
-    it('should set set error to true upon activation failure', inject(
+    it('should set error to true upon activation failure', inject(
       [ActivateService],
       fakeAsync((service: ActivateService) => {
         spyOn(service, 'get').and.returnValue(throwError('ERROR'));
@@ -83,6 +83,7 @@ describe('Component Tests', () => {
 
         expect(comp.error).toBe(true);
         expect(comp.success).toBe(false);
+        expect(comp.message).toBe('Unknown error');
       })
     ));
   });

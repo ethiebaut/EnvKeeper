@@ -114,4 +114,14 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+# Kafka - not used if the Spring kafka profile is not activated
+kafka:
+  bootstrapAddress:
+  eventHubsConnectionString:
+  eventHubsName:
+
+# Google reCAPTCHA configuration
+# Register here: https://www.google.com/recaptcha/admin/create
+captcha:
+  site-key: 'Your Google Recaptcha site Key Here'
+  secret-key: 'Your Google Recaptcha secret Key Here'
