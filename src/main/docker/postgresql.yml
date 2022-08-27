@@ -5,6 +5,7 @@ services:
     # volumes:
     #     - ~/volumes/jhipster/envkeeper/postgresql/:/var/lib/postgresql/data/
     environment:
+      - POSTGRES_DB=EnvKeeper
       - POSTGRES_USER=EnvKeeper
       - POSTGRES_PASSWORD=423gdfg3Hhsefsf8K
       - POSTGRES_HOST_AUTH_METHOD=trust
