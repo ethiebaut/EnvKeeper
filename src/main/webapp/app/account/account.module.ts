@@ -22,6 +22,7 @@ import { EnvKeeperSharedModule } from 'app/shared/shared.module';
 
 import { PasswordStrengthBarComponent } from './password/password-strength-bar.component';
 import { RegisterComponent } from './register/register.component';
+import { ConfirmComponent } from './activate/confirm.component';
 import { ActivateComponent } from './activate/activate.component';
 import { PasswordComponent } from './password/password.component';
 import { PasswordResetInitComponent } from './password-reset/init/password-reset-init.component';
@@ -32,6 +33,7 @@ import { accountState } from './account.route';
 @NgModule({
   imports: [EnvKeeperSharedModule, RouterModule.forChild(accountState)],
   declarations: [
+    ConfirmComponent,
     ActivateComponent,
     RegisterComponent,
     PasswordComponent,

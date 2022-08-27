@@ -2,6 +2,9 @@
   "activate": {
     "title": "Activation",
     "messages": {
+      "confirm": "Are you sure you want to activate your account?",
+      "confirmButton": "Confirm",
+      "captchaError": "Please fill-in the CAPTCHA",
       "success": "<strong>Your user account has been activated.</strong> Please ",
       "error": "<strong>Your user could not be activated.</strong> Please use the registration form to sign up."
     }

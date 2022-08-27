@@ -25,9 +25,12 @@ import { SERVER_API_URL } from 'app/app.constants';
 export class ActivateService {
   constructor(private http: HttpClient) {}
 
-  get(key: string): Observable<{}> {
+  sitekey(): Observable<{}> {
+    return this.http.get(SERVER_API_URL + 'api/captcha');
+  }
+  get(key: string, captcha: string): Observable<{}> {
     return this.http.get(SERVER_API_URL + 'api/activate', {
-      params: new HttpParams().set('key', key),
+      params: new HttpParams().set('key', key).set('captcha', captcha),
     });
   }
 }

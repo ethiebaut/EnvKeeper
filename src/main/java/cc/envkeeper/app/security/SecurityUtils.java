@@ -17,12 +17,21 @@
 
 package cc.envkeeper.app.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -99,4 +108,46 @@ public final class SecurityUtils {
             .map(GrantedAuthority::getAuthority);
     }
 
+    /**
+     * Validates Google reCAPTCHA V2 or Invisible reCAPTCHA.
+     *
+     * @param secretKey Secret key (key given for communication between your
+     * site and Google)
+     * @param response reCAPTCHA response from client side.
+     * (g-recaptcha-response)
+     * @return true if validation successful, false otherwise.
+     */
+    public static synchronized boolean isCaptchaValid(String secretKey, String response) {
+        try {
+            String url = "https://www.google.com/recaptcha/api/siteverify",
+                params = "secret=" + secretKey + "&response=" + response;
+
+            HttpURLConnection http = (HttpURLConnection) new URL(url).openConnection();
+            http.setDoOutput(true);
+            http.setRequestMethod("POST");
+            http.setRequestProperty("Content-Type",
+                "application/x-www-form-urlencoded; charset=UTF-8");
+            OutputStream out = http.getOutputStream();
+            out.write(params.getBytes("UTF-8"));
+            out.flush();
+            out.close();
+
+            InputStream res = http.getInputStream();
+            BufferedReader rd = new BufferedReader(new InputStreamReader(res, "UTF-8"));
+
+            StringBuilder sb = new StringBuilder();
+            int cp;
+            while ((cp = rd.read()) != -1) {
+                sb.append((char) cp);
+            }
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, ?> json = mapper.readValue(sb.toString(), Map.class);
+            res.close();
+
+            return (Boolean)json.get("success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

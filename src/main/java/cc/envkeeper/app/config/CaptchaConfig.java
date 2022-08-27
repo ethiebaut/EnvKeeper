@@ -15,25 +15,26 @@
  *
  */
 
-import { Route } from '@angular/router';
+package cc.envkeeper.app.config;
 
-import { ConfirmComponent } from './confirm.component';
-import { ActivateComponent } from './activate.component';
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.annotation.EnableKafka;
 
-export const confirmRoute: Route = {
-  path: 'confirm',
-  component: ConfirmComponent,
-  data: {
-    authorities: [],
-    pageTitle: 'activate.title',
-  },
-};
+@Configuration
+public class CaptchaConfig {
 
-export const activateRoute: Route = {
-  path: 'activate',
-  component: ActivateComponent,
-  data: {
-    authorities: [],
-    pageTitle: 'activate.title',
-  },
-};
+    @Value(value = "${captcha.site-key}")
+    private String siteKey;
+
+    @Value(value = "${captcha.secret-key}")
+    private String secretKey;
+
+    public String getSiteKey() {
+        return siteKey;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+}

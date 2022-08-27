@@ -17,11 +17,13 @@
 
 package cc.envkeeper.app.web.rest;
 
+import cc.envkeeper.app.config.CaptchaConfig;
 import cc.envkeeper.app.domain.User;
 import cc.envkeeper.app.repository.UserRepository;
 import cc.envkeeper.app.security.SecurityUtils;
 import cc.envkeeper.app.service.MailService;
 import cc.envkeeper.app.service.UserService;
+import cc.envkeeper.app.service.dto.CaptchaDTO;
 import cc.envkeeper.app.service.dto.PasswordChangeDTO;
 import cc.envkeeper.app.service.dto.UserDTO;
 import cc.envkeeper.app.web.rest.errors.*;
@@ -59,11 +61,14 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService) {
+    private final CaptchaConfig captchaConfig;
+
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, CaptchaConfig captchaConfig) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
+        this.captchaConfig = captchaConfig;
     }
 
     /**
@@ -85,16 +90,37 @@ public class AccountResource {
     }
 
     /**
+     * {@code GET  /captcha} : get the captcha site key.
+     *
+     * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
+     */
+    @GetMapping("/captcha")
+    public CaptchaDTO getCaptchaSiteKey() {
+        String siteKey = captchaConfig.getSiteKey();
+        if (siteKey == null || siteKey.isEmpty()) {
+            throw new AccountResourceException("Captcha configuration hasn't been set.");
+        }
+        return new CaptchaDTO(siteKey);
+    }
+
+    /**
      * {@code GET  /activate} : activate the registered user.
      *
      * @param key the activation key.
      * @throws RuntimeException {@code 500 (Internal Server Error)} if the user couldn't be activated.
      */
     @GetMapping("/activate")
-    public void activateAccount(@RequestParam(value = "key") String key) {
+    public void activateAccount(@RequestParam(value = "key") String key, @RequestParam(value = "captcha") String captcha) {
+        String secretKey = captchaConfig.getSecretKey();
+        if (secretKey == null || secretKey.isEmpty()) {
+            throw new AccountResourceException("Captcha configuration hasn't been set.");
+        }
+        if (!SecurityUtils.isCaptchaValid(secretKey, captcha)) {
+            throw new AccountResourceException("Invalid Captcha.");
+        }
         Optional<User> user = userService.activateRegistration(key);
         if (!user.isPresent()) {
-            throw new AccountResourceException("No user was found for this activation key");
+            throw new AccountResourceException("No user was found for this activation key.");
         }
     }
 

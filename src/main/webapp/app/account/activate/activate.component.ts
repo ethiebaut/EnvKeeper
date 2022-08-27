@@ -29,13 +29,17 @@ import { ActivateService } from './activate.service';
 export class ActivateComponent implements OnInit {
   error = false;
   success = false;
+  message = '';
 
   constructor(private activateService: ActivateService, private loginModalService: LoginModalService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.queryParams.pipe(flatMap(params => this.activateService.get(params.key))).subscribe(
+    this.route.queryParams.pipe(flatMap(params => this.activateService.get(params.key, params.captcha))).subscribe(
       () => (this.success = true),
-      () => (this.error = true)
+      err => {
+        this.error = true;
+        this.message = err.error.detail;
+      }
     );
   }
 
