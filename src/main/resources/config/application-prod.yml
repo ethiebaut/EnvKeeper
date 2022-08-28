@@ -121,4 +121,20 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+  email:
+    # Enter your corporate email domain name (e.g. "acme.com")
+    # in order to restrict registrations to this email domain
+    domain:
+
+  # Google reCAPTCHA configuration
+  # Register here: https://www.google.com/recaptcha/admin/create
+  captcha:
+    site-key:
+    secret-key:
+
+# Kafka - not used if the Spring kafka profile is not activated
+kafka:
+  bootstrapAddress:
+  eventHubsConnectionString:
+  eventHubsName:

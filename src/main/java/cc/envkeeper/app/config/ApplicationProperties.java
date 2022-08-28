@@ -17,6 +17,7 @@
 
 package cc.envkeeper.app.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -27,4 +28,48 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
+
+    private final Email email = new Email();
+    private final Captcha captcha = new Captcha();
+
+    public Email getEmail() {
+        return email;
+    }
+
+    public Captcha getCaptcha() {
+        return captcha;
+    }
+
+    public static class Email {
+        private String domain;
+
+        public String getDomain() {
+            return domain;
+        }
+
+        public void setDomain(String domain) {
+            this.domain = domain;
+        }
+    }
+
+    public static class Captcha {
+        private String siteKey;
+        private String secretKey;
+
+        public String getSiteKey() {
+            return siteKey;
+        }
+
+        public void setSiteKey(String siteKey) {
+            this.siteKey = siteKey;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        public void setSecretKey(String secretKey) {
+            this.secretKey = secretKey;
+        }
+    }
 }

@@ -15,26 +15,17 @@
  *
  */
 
-package cc.envkeeper.app.config;
+package cc.envkeeper.app.web.rest.errors;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
+import cc.envkeeper.app.service.exception.ErrorConstants;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
 
-@Configuration
-public class CaptchaConfig {
+public class InvalidEmailException extends AbstractThrowableProblem {
 
-    @Value(value = "${captcha.site-key}")
-    private String siteKey;
+    private static final long serialVersionUID = 1L;
 
-    @Value(value = "${captcha.secret-key}")
-    private String secretKey;
-
-    public String getSiteKey() {
-        return siteKey;
-    }
-
-    public String getSecretKey() {
-        return secretKey;
+    public InvalidEmailException() {
+        super(ErrorConstants.INVALID_EMAIL_TYPE, "Unacceptable email address.", Status.BAD_REQUEST);
     }
 }

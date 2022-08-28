@@ -24,12 +24,19 @@
                 <strong>Registration saved!</strong> Please check your email for confirmation.
             </div>
 
-            <div class="alert alert-danger" *ngIf="error" jhiTranslate="register.messages.error.fail">
-                <strong>Registration failed!</strong> Please try again later.
+            <div class="alert alert-danger" *ngIf="error">
+                <div jhiTranslate="register.messages.error.fail">
+                    <strong>Registration failed!</strong> Please try again later.
+                </div>
+                <div>{{ message }}&nbsp;</div>
             </div>
 
             <div class="alert alert-danger" *ngIf="errorUserExists" jhiTranslate="register.messages.error.userexists">
                 <strong>Login name already registered!</strong> Please choose another one.
+            </div>
+
+            <div class="alert alert-danger" *ngIf="errorInvalidEmail" jhiTranslate="register.messages.error.errorInvalidEmail">
+                <strong>Unacceptable Email address!</strong> Please use your corporate email address.
             </div>
 
             <div class="alert alert-danger" *ngIf="errorEmailExists" jhiTranslate="register.messages.error.emailexists">

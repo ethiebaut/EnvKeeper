@@ -17,7 +17,7 @@
 
 package cc.envkeeper.app.web.rest;
 
-import cc.envkeeper.app.config.CaptchaConfig;
+import cc.envkeeper.app.config.ApplicationProperties;
 import cc.envkeeper.app.domain.User;
 import cc.envkeeper.app.repository.UserRepository;
 import cc.envkeeper.app.security.SecurityUtils;
@@ -26,19 +26,23 @@ import cc.envkeeper.app.service.UserService;
 import cc.envkeeper.app.service.dto.CaptchaDTO;
 import cc.envkeeper.app.service.dto.PasswordChangeDTO;
 import cc.envkeeper.app.service.dto.UserDTO;
-import cc.envkeeper.app.web.rest.errors.*;
+import cc.envkeeper.app.web.rest.errors.EmailAlreadyUsedException;
+import cc.envkeeper.app.web.rest.errors.InvalidEmailException;
+import cc.envkeeper.app.web.rest.errors.InvalidPasswordException;
+import cc.envkeeper.app.web.rest.errors.LoginAlreadyUsedException;
 import cc.envkeeper.app.web.rest.vm.KeyAndPasswordVM;
 import cc.envkeeper.app.web.rest.vm.ManagedUserVM;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Optional;
 
 /**
  * REST controller for managing the current user's account.
@@ -61,20 +65,21 @@ public class AccountResource {
 
     private final MailService mailService;
 
-    private final CaptchaConfig captchaConfig;
+    private final ApplicationProperties applicationProperties;
 
-    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, CaptchaConfig captchaConfig) {
+    public AccountResource(UserRepository userRepository, UserService userService, MailService mailService, ApplicationProperties applicationProperties) {
 
         this.userRepository = userRepository;
         this.userService = userService;
         this.mailService = mailService;
-        this.captchaConfig = captchaConfig;
+        this.applicationProperties = applicationProperties;
     }
 
     /**
      * {@code POST  /register} : register the user.
      *
      * @param managedUserVM the managed user View Model.
+     * @throws InvalidEmailException {@code 400 (Bad Request)} if the email is not acceptable.
      * @throws InvalidPasswordException {@code 400 (Bad Request)} if the password is incorrect.
      * @throws EmailAlreadyUsedException {@code 400 (Bad Request)} if the email is already used.
      * @throws LoginAlreadyUsedException {@code 400 (Bad Request)} if the login is already used.
@@ -82,6 +87,9 @@ public class AccountResource {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerAccount(@Valid @RequestBody ManagedUserVM managedUserVM) {
+        if (!checkEmailAddress(managedUserVM.getEmail())) {
+            throw new InvalidEmailException();
+        }
         if (!checkPasswordLength(managedUserVM.getPassword())) {
             throw new InvalidPasswordException();
         }
@@ -96,7 +104,7 @@ public class AccountResource {
      */
     @GetMapping("/captcha")
     public CaptchaDTO getCaptchaSiteKey() {
-        String siteKey = captchaConfig.getSiteKey();
+        String siteKey = applicationProperties.getCaptcha().getSiteKey();
         if (siteKey == null || siteKey.isEmpty()) {
             throw new AccountResourceException("Captcha configuration hasn't been set.");
         }
@@ -111,7 +119,7 @@ public class AccountResource {
      */
     @GetMapping("/activate")
     public void activateAccount(@RequestParam(value = "key") String key, @RequestParam(value = "captcha") String captcha) {
-        String secretKey = captchaConfig.getSecretKey();
+        String secretKey = applicationProperties.getCaptcha().getSecretKey();
         if (secretKey == null || secretKey.isEmpty()) {
             throw new AccountResourceException("Captcha configuration hasn't been set.");
         }
@@ -219,6 +227,27 @@ public class AccountResource {
 
         if (!user.isPresent()) {
             throw new AccountResourceException("No user was found for this reset key");
+        }
+    }
+
+    private boolean checkEmailAddress(String emailAddress) {
+        try {
+            InternetAddress internetAddress = new InternetAddress(emailAddress);
+            if (internetAddress.isGroup()) {
+                return false;
+            }
+            if (!StringUtils.isEmpty(internetAddress.getPersonal())) {
+                return false;
+            }
+            if (!StringUtils.isEmpty(applicationProperties.getEmail().getDomain())) {
+                if (!emailAddress.endsWith("@" + applicationProperties.getEmail().getDomain())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (AddressException e) {
+            log.warn("Could not parse email address: " + e.getLocalizedMessage());
+            return false;
         }
     }
 
