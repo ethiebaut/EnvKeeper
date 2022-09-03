@@ -9,20 +9,25 @@ This application was generated using JHipster 6.10.3, you can find documentation
 ## TLDR / to install on Kubernetes
 
 ### Without Azure Event Hubs Integration
-1. Set SPRING_PROFILES_ACTIVE to ``prod,swagger`` or just ``prod`` in ``charts/envkeeper/templates/envkeeper-deployment.yml``.
-2. Comment out setting ``EH_CNX_STRING`` in ``install.sh``
+
+1. Set SPRING_PROFILES_ACTIVE to `prod,swagger` or just `prod` in `charts/envkeeper/templates/envkeeper-deployment.yml`.
+2. Comment out setting `EH_CNX_STRING` in `install.sh`
 3. Update values.yaml (don't forget to update the persistent storage class)
 4. Run:
+
 ```shell
 ./install.sh
 ```
+
 This will install EnvKeeper in the current Kubernetes Namespace.
 
-Log in with admin/admin or user/user. 
+Log in with admin/admin or user/user.
 
 ### With Azure Event Hubs integration
-1. In your Azure subscription, create a ``my-azure-rg`` Azure resource group, ``build-notification`` Event Hubs namespace, ``listener`` Listen access policy, and ``build-notifications`` Event Hub.
+
+1. In your Azure subscription, create a `my-azure-rg` Azure resource group, `build-notification` Event Hubs namespace, `listener` Listen access policy, and `build-notifications` Event Hub.
 2. Set the following environment variables:
+
 ```shell
 export AZ_SUBSCRIPTION=12345678-1234-1234-1234-123456789012
 export AZ_RESOURCE_GROUP=my-azure-rg
@@ -30,11 +35,14 @@ export EH_HUB_NS_NAME=build-notification
 export EH_HUB_NS_ACCESS_POLICY=listener
 export EH_HUB_NAME=build-notifications
 ```
+
 3. Update values.yaml (don't forget to update the persistent storage class)
 4. Run:
+
 ```shell
 ./install.sh
 ```
+
 This will install EnvKeeper in the current Kubernetes Namespace.
 
 Log in with admin/admin or user/user.
@@ -95,7 +103,7 @@ To achieve this, first build a docker image of your app by running:
 ./mvnw -Pprod,swagger verify jib:dockerBuild
 ```
 
-Then run:
+Then, assuming you updated application-prod.yaml before building the image run:
 
 ```
 docker-compose -f src/main/docker/app.yml up -d
@@ -107,14 +115,16 @@ EnvKeeper has the concepts of builds, component version, product versions, deplo
 Therefore, it is ideally integrated with your build, deployment and ticket systems.
 
 Two APIs are provided:
-* A REST API (with full swagger UI for easy development)
-* An Event Hubs / Kafka API
+
+- A REST API (with full swagger UI for easy development)
+- An Event Hubs / Kafka API
 
 ### Using the REST API
 
 Full swagger UI is available (log in as admin). A couple of examples follow.
 
 #### How to create a product version by using the API
+
 Post the following to /api/product-versions:
 
 ```
@@ -137,8 +147,8 @@ Post the following to /api/product-versions:
 
 Another /api/product-versions/bulk also exists in order to upload several product versions.
 
-
 #### How to create a deployment by using the API
+
 Post the following to /api/deployments:
 
 ```
@@ -161,7 +171,7 @@ Post the following to /api/deployments:
 
 Another /api/deployments/bulk also exists in order to upload several deployments.
 
-Possible values for ```deploymentStatus``` are:
+Possible values for `deploymentStatus` are:
 
 ```
 DELETED
@@ -174,7 +184,8 @@ FAILED_ROLLED_BACK
 
 First make sure that you created the Event Hub and enabled it as detailed at the top of this document.
 
-If running locally, you will need to update ```application.yaml``` with the following settings (at the top level):
+If running locally, you will need to update `application.yaml` with the following settings (at the top level):
+
 ```yaml
 kafka:
   bootstrapAddress: <EventHubNamespaceHost>:9093
@@ -183,6 +194,7 @@ kafka:
 ```
 
 Remember to start EnvKeeper with the Kafka profile enabled:
+
 ```shell
 export SPRING_PROFILES_ACTIVE=dev,swagger,kafka
 mvn
@@ -190,7 +202,7 @@ mvn
 
 #### To send a test payload
 
-Make sure you update the urls in ``TOKEN`` and ``URL`` in the first two lines below.
+Make sure you update the urls in `TOKEN` and `URL` in the first two lines below.
 A few example files have been provided as payload examples.
 
 ```shell
