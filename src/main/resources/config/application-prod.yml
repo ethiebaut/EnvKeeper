@@ -133,6 +133,10 @@ application:
     site-key:
     secret-key:
 
+  style:
+    # Custom stylesheet
+    stylesheet: custom.css
+
 # Kafka - not used if the Spring kafka profile is not activated
 kafka:
   bootstrapAddress:

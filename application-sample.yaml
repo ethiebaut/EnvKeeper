@@ -16,6 +16,22 @@ jhipster:
         base-url: http://localhost:8080
         from: john.doe@gmail.com
 
+application:
+    email:
+        # Enter your corporate email domain name (e.g. "acme.com")
+        # in order to restrict registrations to this email domain
+        domain:
+
+    # Google reCAPTCHA configuration
+    # Register here: https://www.google.com/recaptcha/admin/create
+    captcha:
+        site-key: 'Your Google Recaptcha site Key Here'
+        secret-key: 'Your Google Recaptcha secret Key Here'
+
+    style:
+        # Custom stylesheet
+        stylesheet: custom.css
+
 # Kafka
 kafka:
     bootstrapAddress: my-build-notification.servicebus.windows.net:9093

@@ -28,12 +28,25 @@ eg $input-color: red;
 @import '~bootstrap/scss/bootstrap';
 @import '~bootswatch/dist/minty/bootswatch';
 // Import Material theme
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 // ng-sortgrid styles
-@import "~ng-sortgrid/styles/ngsg.css";
+@import '~ng-sortgrid/styles/ngsg.css';
 
 .table a {
   font-weight: 600;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: $primary;
+}
+
+nav a:not([href]) {
+  color: $gray-900;
+}
+
+nav a:not([href]):hover {
+  color: $dropdown-link-hover-color;
 }
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */

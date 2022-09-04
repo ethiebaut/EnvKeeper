@@ -31,6 +31,7 @@ public class ApplicationProperties {
 
     private final Email email = new Email();
     private final Captcha captcha = new Captcha();
+    private final Style style = new Style();
 
     public Email getEmail() {
         return email;
@@ -38,6 +39,10 @@ public class ApplicationProperties {
 
     public Captcha getCaptcha() {
         return captcha;
+    }
+
+    public Style getStyle() {
+        return style;
     }
 
     public static class Email {
@@ -70,6 +75,18 @@ public class ApplicationProperties {
 
         public void setSecretKey(String secretKey) {
             this.secretKey = secretKey;
+        }
+    }
+
+    public static class Style {
+        private String stylesheet;
+
+        public String getStylesheet() {
+            return stylesheet;
+        }
+
+        public void setStylesheet(String stylesheet) {
+            this.stylesheet = stylesheet;
         }
     }
 }

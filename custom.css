@@ -1,0 +1,19 @@
+nav.bg-primary {
+  background-color: #e65100 !important;
+}
+
+.dropdown-item:hover,
+.dropdown-item:focus {
+  background-color: #e65100;
+}
+
+.btn-primary {
+  background-color: #e65100;
+  border-color: #e65100;
+}
+
+.btn-primary.disabled,
+.btn-primary:disabled {
+  background-color: #e65100;
+  border-color: #e65100;
+}
